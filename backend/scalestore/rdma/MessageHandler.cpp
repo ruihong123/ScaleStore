@@ -273,7 +273,7 @@ void MessageHandler::startThread() {
                      // -------------------------------------------------------------------------------------
                      // potential deadlock, restart and release latches
                      if (guard.frame->mhWaiting && guard.frame->state != BF_STATE::HOT) {
-                        ensure((guard.frame->state == BF_STATE::IO_RDMA) | (guard.frame->state == BF_STATE::FREE));
+                        ensure((guard.frame->state == BF_STATE::IO_RDMA) || (guard.frame->state == BF_STATE::FREE));
                         response.resultType = RESULT::CopyFailedWithRestart;
                         writeMsg(clientId, response, threads::ThreadContext::my().page_handle);
                         guard.frame->latch.unlatchShared();

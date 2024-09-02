@@ -9,6 +9,7 @@
 
 namespace scalestore {
 namespace storage {
+//TODO: this page is required to be migrated onto disaggregated memory.
 PageProvider::PageProvider(CM<rdma::InitMessage>& cm,
                            storage::Buffermanager& bm,
                            std::vector<MessageHandler::MailboxPartition>& mhPartitions,
@@ -125,7 +126,7 @@ void PageProvider::startThread() {
    // -------------------------------------------------------------------------------------
    using namespace std::chrono_literals;
    for (uint64_t t_i = 0; t_i < FLAGS_pageProviderThreads; t_i++) {
-      pp_threads.emplace_back([&, t_i, connect]() {     // ATTENTION: connect needs to be copied other wise leaves scope
+      pp_threads.emplace_back([&, t_i, connect]() {     // ATTENTION: connect needs to be copied otherwise leaves scope
          profiling::WorkerCounters counters;  // create counters
          // -------------------------------------------------------------------------------------
          std::unique_ptr<threads::ThreadContext> threadContext = std::make_unique<threads::ThreadContext>();
@@ -534,7 +535,7 @@ void PageProvider::startThread() {
                            begin_sampling, end_sampling,
                            [&](BufferFrame& frame) {
                               if(samples == required_samples) return false;
-                              if ((frame.state == BF_STATE::FREE) | (frame.state == BF_STATE::EVICTED)) { return true; }
+                              if ((frame.state == BF_STATE::FREE) || (frame.state == BF_STATE::EVICTED)) { return true; }
                               sample_epochs[samples++] = frame.epoch;
                               return true;
                            },
@@ -553,7 +554,7 @@ void PageProvider::startThread() {
                   batch_traverse_hashtable(
                       begin, end,
                       [&](BufferFrame& frame) {
-                         if ((frame.state == BF_STATE::FREE) | (frame.state == BF_STATE::EVICTED)) { return true; }
+                         if ((frame.state == BF_STATE::FREE) || (frame.state == BF_STATE::EVICTED)) { return true; }
                          if (frame.pid != EMPTY_PID && !frame.latch.isLatched()) {
                             if(FLAGS_evict_to_ssd){
                                if (frame.epoch <= eviction_window) { candidate_batch[candidate_max++] = {frame.epoch, &frame}; }
