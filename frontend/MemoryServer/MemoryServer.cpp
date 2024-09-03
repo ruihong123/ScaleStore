@@ -101,32 +101,32 @@ struct YCSB_workloadInfo : public scalestore::profiling::WorkloadInfo {
 using namespace scalestore;
 int main(int argc, char* argv[])
 {
-   using K = uint64_t;
-   using V = BytesPayload<128>;
+//   using K = uint64_t;
+//   using V = BytesPayload<128>;
 
    gflags::SetUsageMessage("Catalog Test");
    gflags::ParseCommandLineFlags(&argc, &argv, true);
    ScaleStore scalestore;
-   auto& catalog = scalestore.getCatalog();
+//   auto& catalog = scalestore.getCatalog();
    // -------------------------------------------------------------------------------------
-   auto partition = [&](uint64_t id, uint64_t participants, uint64_t N) -> Partition {
-      const uint64_t blockSize = N / participants;
-      auto begin = id * blockSize;
-      auto end = begin + blockSize;
-      if (id == participants - 1)
-         end = N;
-      return {.begin = begin, .end = end};
-   };
-
-   auto barrier_wait = [&]() {
-      for (uint64_t t_i = 0; t_i < FLAGS_worker; ++t_i) {
-         scalestore.getWorkerPool().scheduleJobAsync(t_i, [&, t_i]() {
-            storage::DistributedBarrier barrier(catalog.getCatalogEntry(BARRIER_ID).pid);
-            barrier.wait();
-         });
-      }
-      scalestore.getWorkerPool().joinAll();
-   };
+//   auto partition = [&](uint64_t id, uint64_t participants, uint64_t N) -> Partition {
+//      const uint64_t blockSize = N / participants;
+//      auto begin = id * blockSize;
+//      auto end = begin + blockSize;
+//      if (id == participants - 1)
+//         end = N;
+//      return {.begin = begin, .end = end};
+//   };
+//
+//   auto barrier_wait = [&]() {
+//      for (uint64_t t_i = 0; t_i < FLAGS_worker; ++t_i) {
+//         scalestore.getWorkerPool().scheduleJobAsync(t_i, [&, t_i]() {
+//            storage::DistributedBarrier barrier(catalog.getCatalogEntry(BARRIER_ID).pid);
+//            barrier.wait();
+//         });
+//      }
+//      scalestore.getWorkerPool().joinAll();
+//   };
     while (1){
         //no operation
         _mm_pause();
