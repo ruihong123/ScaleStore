@@ -112,7 +112,8 @@ int main(int argc, char* argv[])
    std::vector<uint32_t> workloads;
    std::vector<double> zipfs;
    if(FLAGS_YCSB_all_workloads){
-      workloads.push_back(5); 
+//      workloads.push_back(5);
+      workloads.push_back(0);
       workloads.push_back(50); 
       workloads.push_back(95);
       workloads.push_back(100);

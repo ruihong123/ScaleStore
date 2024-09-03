@@ -5,17 +5,17 @@ SERVER_PORT = 20005
 
 
 server_list = ServerList(
-#----------------------Purdue------------------------
+    #----------------------Purdue------------------------
     # compute nodes fill in
-    Server('node-0', '10.145.21.34', SERVER_PORT, ssdPath="/dev/shm"),
-    Server('node-1', '10.145.21.35', SERVER_PORT, ssdPath="/dev/shm "),
+    Server('node-0', '10.145.21.34', SERVER_PORT, ssdPath="/ssd_root/wang4996"),
+    Server('node-1', '10.145.21.35', SERVER_PORT, ssdPath="/ssd_root/wang4996"),
 
 
     # memory nodes fill in
-    Server('node-2', '10.145.21.36', SERVER_PORT, ssdPath="/dev/shm"),
-    Server('node-3', '10.145.21.39', SERVER_PORT, ssdPath="/dev/shm"),
+    Server('node-2', '10.145.21.36', SERVER_PORT, ssdPath="/ssd_root/wang4996"),
+    Server('node-3', '10.145.21.39', SERVER_PORT, ssdPath="/ssd_root/wang4996"),
 
-#----------------------cloudlab----------------------
+    #----------------------cloudlab----------------------
     # compute nodes fill in
     # Server('node-0', 'node-0', SERVER_PORT, ssdPath="/dev/shm"),
     # Server('node-1', 'node-1', SERVER_PORT, ssdPath="/dev/shm "),

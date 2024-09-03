@@ -7,9 +7,10 @@ namespace storage {
 // ExclusiveBFGuard
 // -------------------------------------------------------------------------------------
 // new Page
-
+std::atomic<uint64_t> roundrobin_counter = 0;
 ExclusiveBFGuard::ExclusiveBFGuard(){
-   g.frame = &BM::global->newPage();
+    //TODO: make change the code below to &BM::global->newRemotePage(remoteNodeId);
+   g.frame = &BM::global->newRemotePage((roundrobin_counter.fetch_add(1)%(FLAGS_nodes/2))*2+1);
    g.frame->dirty = true;
    g.latchState = LATCH_STATE::EXCLUSIVE;
    g.state = STATE::INITIALIZED;
