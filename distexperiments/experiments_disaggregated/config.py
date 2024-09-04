@@ -7,13 +7,13 @@ SERVER_PORT = 20000
 server_list = ServerList(
     #----------------------Purdue------------------------
     # compute nodes fill in
-    Server('node-0', '10.145.21.34', SERVER_PORT, ssdPath="~/ScaleStore/distexperiments/SSDData/DATA"),
-    Server('node-1', '10.145.21.35', SERVER_PORT, ssdPath="~/ScaleStore/distexperiments/SSDData/DATA"),
+    Server('node-0', '10.145.21.34', SERVER_PORT, ssdPath="~/ScaleStore/distexperiments/SSDData/DATA/"),
+    Server('node-1', '10.145.21.35', SERVER_PORT, ssdPath="~/ScaleStore/distexperiments/SSDData/DATA/"),
 
 
     # memory nodes fill in
-    Server('node-2', '10.145.21.36', SERVER_PORT, ssdPath="~/ScaleStore/distexperiments/SSDData/DATA"),
-    Server('node-3', '10.145.21.39', SERVER_PORT, ssdPath="~/ScaleStore/distexperiments/SSDData/DATA"),
+    Server('node-2', '10.145.21.36', SERVER_PORT, ssdPath="~/ScaleStore/distexperiments/SSDData/DATA/"),
+    Server('node-3', '10.145.21.39', SERVER_PORT, ssdPath="~/ScaleStore/distexperiments/SSDData/DATA/"),
 
     #----------------------cloudlab----------------------
     # compute nodes fill in

@@ -41,16 +41,16 @@ def ycsbBenchmark(servers, dramGBCompute, dramGBMemory, ssdGBCompute, ssdGBMemor
     servers.cd("/home/wang4996/ScaleStore/build/frontend")
 
     cmds = []
-    for i in range(0,len(servers)):
-        print(i)
-        cmd = f'blkdiscard {servers[i].ssdPath}'
-        cmds += [servers[i].run_cmd(cmd)]
+    # for i in range(0,len(servers)):
+    #     print(i)
+    #     cmd = f'blkdiscard {servers[i].ssdPath}'
+    #     cmds += [servers[i].run_cmd(cmd)]
 
     if not all(cmd.wait() == 0 for cmd in cmds):
         return Action.RESTART
 
     sizeBytes = (dramGBMemory - 2) * 1024 * 1024 * 1024
-    numTuples = int(((int(sizeBytes * (fillDegree / 100)  / YCSB_TUPLE_SIZE)) * numberNodes) / 2)
+    numTuples = int(((int(sizeBytes / YCSB_TUPLE_SIZE)) * numberNodes) / 2)
 
     z = float(zipf)/100
     cmds = []
