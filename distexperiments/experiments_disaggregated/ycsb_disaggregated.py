@@ -21,17 +21,17 @@ parameter_grid = ParameterGrid(
 )
 
 
-# @reg_exp(servers=config.server_list[:NUMBER_NODES])
-# def compile(servers):
-#     servers.cd("/home/tziegler/scalestore/build")
-#     cmake_cmd = f'cmake -D CMAKE_C_COMPILER=gcc-10 -D CMAKE_CXX_COMPILER=g++-10 -DCMAKE_BUILD_TYPE=Release ..'
-#     procs = [s.run_cmd(cmake_cmd) for s in servers]
-#     assert(all(p.wait() == 0 for p in procs))
-#
-#     make_cmd = f'make -j'
-#     procs = [s.run_cmd(make_cmd) for s in servers]
-#     assert(all(p.wait() == 0 for p in procs))
-#
+@reg_exp(servers=config.server_list[:NUMBER_NODES])
+def compile(servers):
+    servers.cd("/home/wang4996/ScaleStore/build")
+    cmake_cmd = f'cmake -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=Release ..'
+    procs = [s.run_cmd(cmake_cmd) for s in servers]
+    assert(all(p.wait() == 0 for p in procs))
+
+    make_cmd = f'make -j'
+    procs = [s.run_cmd(make_cmd) for s in servers]
+    assert(all(p.wait() == 0 for p in procs))
+
 
 PAGE_SIZE = 2048
 YCSB_TUPLE_SIZE = 8 + 8
