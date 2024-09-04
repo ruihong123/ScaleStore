@@ -38,7 +38,7 @@ YCSB_TUPLE_SIZE = 8 + 8
 @reg_exp(servers=config.server_list[:NUMBER_NODES], params=parameter_grid, raise_on_rc=True, max_restarts=1)
 # def ycsbBenchmark(servers, dramGB, numberNodes, zipf, readRatio, fillDegree,probSSD, pp,fp,partitioned):
 def ycsbBenchmark(servers, dramGBCompute, dramGBMemory, ssdGBCompute, ssdGBMemory, numberNodes, zipf,fillDegree,probSSD, pp,fp,partitioned,RUNS):
-    servers.cd("/home/tziegler/scalestore/build/frontend")
+    servers.cd("/home/wang4996/ScaleStore/build/frontend")
 
     cmds = []
     for i in range(0,len(servers)):
