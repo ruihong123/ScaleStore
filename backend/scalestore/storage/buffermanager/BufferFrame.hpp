@@ -54,11 +54,11 @@ struct BufferFrame {
    HybridLatch latch;
 
    // -------------------------------------------------------------------------------------
-   void fill(PID pid, Page* page, POSSESSION possession)
+   void fill(PID pid1, Page* page1, POSSESSION possession1)
    {
-      this->pid = pid;
-      this->page = page;
-      this->possession = possession;
+      this->pid = pid1;
+      this->page = page1;
+      this->possession = possession1;
    }
    // -------------------------------------------------------------------------------------
    void reset()

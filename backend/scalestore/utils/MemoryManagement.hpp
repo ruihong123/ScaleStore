@@ -25,9 +25,16 @@ class HugePages
   public:
    HugePages(size_t size) : size(size)
    {
-      void* p = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB, -1, 0);
-      if (p == MAP_FAILED)
-         throw std::runtime_error("mallocHugePages failed");
+       //TODO: change the hugepage allocation to the way introduced in SELCC.
+       void* p;
+       auto ret = posix_memalign(&p, 1 << 21, size);
+       if (ret != 0) {
+           throw std::runtime_error("Posix alignment failed\n");
+       }
+       madvise(p, size, MADV_HUGEPAGE);
+//      void* p = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB, -1, 0);
+//      if (p == MAP_FAILED)
+//         throw std::runtime_error("mallocHugePages failed");
       memory = static_cast<T*>(p);
       highWaterMark = (size / sizeof(T));
    }
