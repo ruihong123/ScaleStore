@@ -5,7 +5,7 @@ NUMBER_NODES = 4
 
 parameter_grid = ParameterGrid(
     dramGBCompute=[8],
-    dramGBMemory=[26],
+    dramGBMemory=[24],
     ssdGBCompute=[1],
     ssdGBMemory=[24],
     numberNodes= [NUMBER_NODES],
