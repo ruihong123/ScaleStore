@@ -301,7 +301,7 @@ public:
 
     // create rdma ressources
     struct sockaddr_storage sin;
-//    getAddr(FLAGS_ownIp, (struct sockaddr *)&sin);
+    getAddr(FLAGS_ownIp, (struct sockaddr *)&sin);
     bindHandler(sin);
     createPD(incomingCmId); // single pd shared between clients and server
     createMR();             // single mr shared between clients and server
