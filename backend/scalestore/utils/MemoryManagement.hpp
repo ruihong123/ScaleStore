@@ -25,7 +25,6 @@ class HugePages
   public:
    HugePages(size_t size) : size(size)
    {
-       //TODO: change the hugepage allocation to the way introduced in SELCC.
        void* p;
        auto ret = posix_memalign(&p, 1 << 21, size);
        if (ret != 0) {
