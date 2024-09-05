@@ -7,13 +7,13 @@ SERVER_PORT = 20000
 server_list = ServerList(
     #----------------------Purdue------------------------
     # compute nodes fill in
-    Server('node-0', '10.145.21.34', SERVER_PORT, ibIp='192.168.100.1', ssdPath="/home/wang4996/ScaleStore/distexperiments/SSDData/DATA/file.txt"),
-    Server('node-1', '10.145.21.35', SERVER_PORT, ibIp='192.168.100.2', ssdPath="/home/wang4996/ScaleStore/distexperiments/SSDData/DATA/file.txt"),
+    Server('node-0', '192.168.100.1', SERVER_PORT, ibIp='192.168.100.1', ssdPath="/home/wang4996/ScaleStore/distexperiments/SSDData/DATA/file.txt"),
+    Server('node-1', '192.168.100.2', SERVER_PORT, ibIp='192.168.100.2', ssdPath="/home/wang4996/ScaleStore/distexperiments/SSDData/DATA/file.txt"),
 
 
     # memory nodes fill in
-    Server('node-2', '10.145.21.36', SERVER_PORT, ibIp='192.168.100.3', ssdPath="/home/wang4996/ScaleStore/distexperiments/SSDData/DATA/file.txt"),
-    Server('node-3', '10.145.21.39', SERVER_PORT, ibIp='192.168.100.4', ssdPath="/home/wang4996/ScaleStore/distexperiments/SSDData/DATA/file.txt"),
+    Server('node-2', '192.168.100.3', SERVER_PORT, ibIp='192.168.100.3', ssdPath="/home/wang4996/ScaleStore/distexperiments/SSDData/DATA/file.txt"),
+    Server('node-3', '192.168.100.4', SERVER_PORT, ibIp='192.168.100.4', ssdPath="/home/wang4996/ScaleStore/distexperiments/SSDData/DATA/file.txt"),
 
     #----------------------cloudlab----------------------
     # compute nodes fill in
