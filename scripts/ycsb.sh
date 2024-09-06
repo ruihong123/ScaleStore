@@ -52,6 +52,18 @@ compute_ARGS="$@"
 echo "input Arguments: ${compute_ARGS}"
 echo "launch..."
 
+dramGBCompute=8
+dramGBMemory=24
+ssdGBCompute=9
+ssdGBMemory=25
+numberNodes= $(($compute_num+$memory_num))
+zipf=0
+probSSD=100
+pp=2
+fp=1
+RUNS=1
+ssd_path="/mnt/disk"
+
 launch () {
 
   read -r -a memcached_node <<< $(head -n 1 $proj_dir/memcached_ip.conf)
@@ -71,18 +83,18 @@ launch () {
         ssh ${ssh_opts} ${memory} " $script_memory" &
         sleep 1
   done
-  script_compute="cd ${bin_dir} && ./tpcc ${compute_ARGS} -d${dist_ratio}"
+  script_compute="cd ${bin_dir} && ./ycsb -worker=8 -dramGB=$dramGBCompute -nodes=$numberNodes -messageHandlerThreads=4   -ownIp=$compute -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=20 -YCSB_tuple_count=$numTuples -YCSB_zipf_factor=$z -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBCompute -YCSB_warm_up -prob_SSD=$probSSD  -YCSB_all_workloads -noYCSB_partitioned -tag=noYCSB_partitioned"
   echo "start master: ssh ${ssh_opts} ${master_host} '$script_compute -sn$master_host  -nid0 | tee -a ${output_file} "
   ssh ${ssh_opts} ${master_host} "echo '$core_dump_dir/core$master_host' | sudo tee /proc/sys/kernel/core_pattern"
 
-  ssh ${ssh_opts} ${master_host} "ulimit -S -c unlimited && $script_compute -sn$master_host -nid0 |tee -a ${output_file}" &
+  ssh ${ssh_opts} ${master_host} "ulimit -S -c unlimited && $script_compute |tee -a ${output_file}" &
 #  sleep 1
 
   for ((i=1;i<${#compute_nodes[@]};i++)); do
     compute=${compute_nodes[$i]}
     echo "start worker: ssh ${ssh_opts} ${compute} '$script_compute -sn$compute -nid$((2*$i)) | tee -a ${output_file}' &"
     ssh ${ssh_opts} ${compute} "echo '$core_dump_dir/core$compute' | sudo tee /proc/sys/kernel/core_pattern"
-    ssh ${ssh_opts} ${compute} "ulimit -S -c unlimited && $script_compute -sn$compute -nid$((2*$i)) | tee -a ${output_file}" &
+    ssh ${ssh_opts} ${compute} "ulimit -S -c unlimited && $script_compute | tee -a ${output_file}" &
 #    sleep 1
   done
 
@@ -91,25 +103,24 @@ launch () {
   echo "done for ${dist_ratio}"
 }
 
-run_tpcc () {
-  dist_ratios=(0 10 20 30 40 50 60 70 80 90 100)
-#  dist_ratios=(100)
-
-  for dist_ratio in ${dist_ratios[@]}; do
-    launch ${dist_ratio}
-  done
-}
-
-vary_read_ratios () {
-  #read_ratios=(0 30 50 70 90 100)
-  read_ratios=(0)
-  for read_ratio in ${read_ratios[@]}; do
-    old_user_args=${compute_ARGS}
-    compute_ARGS="${compute_ARGS} -r${read_ratio}"
-    run_tpcc
-    compute_ARGS=${old_user_args}
-  done
-}
+#run_tpcc () {
+#
+#
+#
+#    launch
+#
+#}
+#
+#vary_read_ratios () {
+#  #read_ratios=(0 30 50 70 90 100)
+#  read_ratios=(0)
+#  for read_ratio in ${read_ratios[@]}; do
+#    old_user_args=${compute_ARGS}
+#    compute_ARGS="${compute_ARGS} -r${read_ratio}"
+#    run_tpcc
+#    compute_ARGS=${old_user_args}
+#  done
+#}
 #vary_thread_number () {
 #  #read_ratios=(0 30 50 70 90 100)
 #  thread_number=(1)
@@ -121,35 +132,17 @@ vary_read_ratios () {
 #  done
 #}
 
-vary_query_ratio () {
-  #read_ratios=(0 30 50 70 90 100)
-  thread_number=(1)
-  WarehouseNum=(256)
-  FREQUENCY_DELIVERY=(100 0 0 0 0 20 33 0 0)
-  FREQUENCY_PAYMENT=(0 100 0 0 0 20 33 0 50)
-  FREQUENCY_NEW_ORDER=(0 0 100 0 0 20 33 0 50)
-  FREQUENCY_ORDER_STATUS=(0 0 0 100 0 20 0 50 0)
-  FREQUENCY_STOCK_LEVEL=(0 0 0 0 100 20 0 50 0)
-  for ware_num in ${WarehouseNum[@]}; do
-    for qr_index in 1 2; do
-      for thread_n in ${thread_number[@]}; do
-        compute_ARGS="-p$port -sf$ware_num -sf1 -c$thread_n -rde${FREQUENCY_DELIVERY[$qr_index]} -rpa${FREQUENCY_PAYMENT[$qr_index]} -rne${FREQUENCY_NEW_ORDER[$qr_index]} -ror${FREQUENCY_ORDER_STATUS[$qr_index]} -rst${FREQUENCY_STOCK_LEVEL[$qr_index]} -t1000000 -f../connection.conf"
-        run_tpcc
-      done
-    done
-  done
-}
-#vary_query_ratio2 () {
+#vary_query_ratio () {
 #  #read_ratios=(0 30 50 70 90 100)
-#  thread_number=(8)
-#  WarehouseNum=(64 256)
-#  FREQUENCY_DELIVERY=(100 0 0 0 0)
-#  FREQUENCY_PAYMENT=(0 100 0 0 0)
-#  FREQUENCY_NEW_ORDER=(0 0 100 0 0)
-#  FREQUENCY_ORDER_STATUS=(0 0 0 100 0)
-#  FREQUENCY_STOCK_LEVEL=(0 0 0 0 100)
-#  for qr_index in 0 1 2 3 4; do
-#    for ware_num in ${WarehouseNum[@]}; do
+#  thread_number=(1)
+#  WarehouseNum=(256)
+#  FREQUENCY_DELIVERY=(100 0 0 0 0 20 33 0 0)
+#  FREQUENCY_PAYMENT=(0 100 0 0 0 20 33 0 50)
+#  FREQUENCY_NEW_ORDER=(0 0 100 0 0 20 33 0 50)
+#  FREQUENCY_ORDER_STATUS=(0 0 0 100 0 20 0 50 0)
+#  FREQUENCY_STOCK_LEVEL=(0 0 0 0 100 20 0 50 0)
+#  for ware_num in ${WarehouseNum[@]}; do
+#    for qr_index in 1 2; do
 #      for thread_n in ${thread_number[@]}; do
 #        compute_ARGS="-p$port -sf$ware_num -sf1 -c$thread_n -rde${FREQUENCY_DELIVERY[$qr_index]} -rpa${FREQUENCY_PAYMENT[$qr_index]} -rne${FREQUENCY_NEW_ORDER[$qr_index]} -ror${FREQUENCY_ORDER_STATUS[$qr_index]} -rst${FREQUENCY_STOCK_LEVEL[$qr_index]} -t1000000 -f../connection.conf"
 #        run_tpcc
@@ -157,27 +150,22 @@ vary_query_ratio () {
 #    done
 #  done
 #}
-
-vary_temp_locality () {
-  #localities=(0 30 50 70 90 100)
-  localities=(0 50 100)
-  for locality in ${localities[@]}; do
-    old_user_args=${compute_ARGS}
-    compute_ARGS="${compute_ARGS -l${locality}}"
-    run_tpcc
-    compute_ARGS=${old_user_args}
-  done
-}
-
-auto_fill_params () {
-  # so that users don't need to specify parameters for themselves
-  compute_ARGS="-p$port -sf512 -sf1 -c4 -t200000 -f../connection.conf"
-}
-
-auto_fill_params
+#
+#
+#vary_temp_locality () {
+#  #localities=(0 30 50 70 90 100)
+#  localities=(0 50 100)
+#  for locality in ${localities[@]}; do
+#    old_user_args=${compute_ARGS}
+#    compute_ARGS="${compute_ARGS -l${locality}}"
+#    run_tpcc
+#    compute_ARGS=${old_user_args}
+#  done
+#}
 # run standard tpcc
 #run_tpcc
 #vary_thread_number
-vary_query_ratio
+#vary_query_ratio
 # vary_read_ratios
 #vary_temp_locality
+launch

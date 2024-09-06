@@ -17,6 +17,7 @@ endif ()
 add_library(scalestore STATIC ${SCALESTORE_CC})
 
 OPTION(SANI "Compile scalestore with sanitizers" OFF)
+
 IF(SANI)
   if (CMAKE_BUILD_TYPE MATCHES Debug)
     message("Compiling with Sanitizers")
