@@ -91,7 +91,7 @@ int main(int argc, char* argv[])
    // BARRIER
    if (scalestore.getNodeID() == 0) {
       scalestore.getWorkerPool().scheduleJobSync(0, [&]() {
-         scalestore.createBarrier(FLAGS_worker * FLAGS_nodes);
+         scalestore.createBarrier(FLAGS_worker * (FLAGS_nodes)/2); // we need to make sure that compute and memory nodes number are equal.
       });
    }
    std::cout << "before barrier" << "\n";
