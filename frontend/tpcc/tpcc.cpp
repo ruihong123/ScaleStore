@@ -135,7 +135,8 @@ int main(int argc, char* argv[]) {
       item = ScaleStoreAdapter<item_t>(db, "item");
       stock = ScaleStoreAdapter<stock_t>(db, "stock");
       // -------------------------------------------------------------------------------------
-      if (db.getNodeID() == 0) db.createBarrier(FLAGS_worker * FLAGS_nodes);  // distributed barrier
+      //the node number is two times of compute nodes in the disaggregated setup
+      if (db.getNodeID() == 0) db.createBarrier(FLAGS_worker * FLAGS_nodes/2 );  // distributed barrier // we need to make sure that compute and memory nodes number are equal.
    });
    // -------------------------------------------------------------------------------------
    // load data

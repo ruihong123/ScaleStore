@@ -164,7 +164,8 @@ int main(int argc, char* argv[])
    if (scalestore.getNodeID() == 0) {
       scalestore.getWorkerPool().scheduleJobSync(0, [&]() {
          scalestore.createBTree<K, V>();
-         scalestore.createBarrier(FLAGS_worker * FLAGS_nodes);
+         // the node number is two times of compute nodes in the disaggregated setup
+         scalestore.createBarrier(FLAGS_worker * FLAGS_nodes/2); // we need to make sure that compute and memory nodes number are equal.
       });
    }
    // -------------------------------------------------------------------------------------
