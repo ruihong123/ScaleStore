@@ -55,7 +55,7 @@ struct Worker {
    void writeMsg(NodeID nodeId, MSG& msg)
       {
          auto& wqe = cctxs[nodeId].wqe;
-         uint64_t SIGNAL_ = FLAGS_pollingInterval -1;
+         uint64_t SIGNAL_ = FLAGS_pollingInterval/2 -1; //TODO: change FLAGS_pollingInterval -1 to FLAGS_pollingInterval/2 -1
          rdma::completion  signal = ((wqe & SIGNAL_) == 0) ? rdma::completion::signaled : rdma::completion::unsignaled;
          uint8_t flag = 1;
          // rdma::postWriteBatch(*(cctxs[nodeId].rctx), signal,
@@ -63,6 +63,7 @@ struct Worker {
          //                      RDMABatchElement{.memAddr = &flag, .size = (sizeof(uint8_t)), .remoteOffset = cctxs[nodeId].mbOffset});
          // -------------------------------------------------------------------------------------
          rdma::postWrite(&msg, *(cctxs[nodeId].rctx), rdma::completion::unsignaled,cctxs[nodeId].plOffset);
+         //Why is flag RDMA registered.
          rdma::postWrite(&flag, *(cctxs[nodeId].rctx), signal ,cctxs[nodeId].mbOffset);
          // -------------------------------------------------------------------------------------
          if ((wqe & SIGNAL_) == SIGNAL_) {

@@ -371,6 +371,7 @@ void PageProvider::startThread() {
                std::vector<std::pair<Guard, uint64_t>> guards_p;  // guard and offet to request entrie
                guards_p.reserve(request.elements);
                // optimization we could early abort in find frame or insert if ee.pVersion is not the same
+               //TOTHINK: what if the page content is the same but the version is different?
                for (uint64_t ee_i = 0; ee_i < request.elements; ee_i++) {
                   auto& ee = request.entries[ee_i];
                   auto guard = bm.findFrame<CONTENTION_METHOD::NON_BLOCKING>(ee.pid, Exclusive(), request.bmId);
@@ -658,7 +659,7 @@ void PageProvider::startThread() {
                   } else {
                      partition.cctxs[n_i].outgoing.current->failedSend++;
                   }
-            }
+               }
             auto end_p4 = counters.getTimePoint_for(profiling::WorkerCounters::pp_latency_p4_send_requests);
             counters.incr_by(profiling::WorkerCounters::pp_latency_p4_send_requests, end_p4 - start_p4);
             // -------------------------------------------------------------------------------------

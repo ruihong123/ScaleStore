@@ -49,7 +49,9 @@ class HugePages
    {
       return memory[index];
    }
-   ~HugePages() { munmap(memory, size); }
+   ~HugePages() {
+//       munmap(memory, size);
+   }
 };
 
 // -------------------------------------------------------------------------------------
