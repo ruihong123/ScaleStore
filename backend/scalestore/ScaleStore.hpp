@@ -23,8 +23,11 @@ namespace scalestore
 // avoids destruction of objects before remote side finished
 struct RemoteGuard{
    std::atomic<uint64_t>& numberRemoteConnected;
-   RemoteGuard(std::atomic<uint64_t>& numberRemoteConnected) : numberRemoteConnected(numberRemoteConnected){};
-   ~RemoteGuard(){ while(numberRemoteConnected);}
+    uint64_t total_connection;
+   RemoteGuard(std::atomic<uint64_t>& numberRemoteConnected) : numberRemoteConnected(numberRemoteConnected), total_connection(numberRemoteConnected){};
+   ~RemoteGuard(){
+       while(numberRemoteConnected >= total_connection/2);
+   }
 };
 
 class ScaleStore
