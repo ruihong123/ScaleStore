@@ -63,7 +63,7 @@ pp=2
 fp=1
 RUNS=1
 ssd_path="/mnt/core_dump/data.blk"
-
+numTuples=2000000000
 echo "number of nodes: ${numberNodes}"
 
 launch () {
