@@ -21,6 +21,7 @@ namespace scalestore
 {
 // -------------------------------------------------------------------------------------
 // avoids destruction of objects before remote side finished
+// this has been changed according to the setup of disaggregated memory
 struct RemoteGuard{
    std::atomic<uint64_t>& numberRemoteConnected;
     uint64_t total_connection;
