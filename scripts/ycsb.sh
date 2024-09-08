@@ -79,7 +79,7 @@ launch () {
         ssh ${ssh_opts} $memory "sudo ifconfig ib0 $ibip"
         script_memory="cd ${bin_dir} && $numacommand ./MemoryServer -worker=4 -dramGB=$dramGBMemory -nodes=$numberNodes -messageHandlerThreads=4   -ownIp=$ibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=20 -YCSB_tuple_count=$numTuples -YCSB_zipf_factor=$zipf -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBMemory -YCSB_warm_up -prob_SSD=$probSSD  -YCSB_all_workloads -noYCSB_partitioned -tag=noYCSB_partitioned > ${output_file} 2>&1"
         echo "start worker: ssh ${ssh_opts} ${memory} '$script_memory' &"
-        ssh ${ssh_opts} ${memory} "touch /mnt/core_dump/data.blk && echo '$core_dump_dir/core$memory' | sudo tee /proc/sys/kernel/core_pattern"
+        ssh ${ssh_opts} ${memory} "sudo touch /mnt/core_dump/data.blk && echo '$core_dump_dir/core$memory' | sudo tee /proc/sys/kernel/core_pattern"
         ssh ${ssh_opts} ${memory} " $script_memory" &
         sleep 1
   done
@@ -89,7 +89,7 @@ launch () {
 
   script_compute="cd ${bin_dir} && ./ycsb -worker=8 -dramGB=$dramGBCompute -nodes=$numberNodes -messageHandlerThreads=4   -ownIp=$hostibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=20 -YCSB_tuple_count=$numTuples -YCSB_zipf_factor=$zipf -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBCompute -YCSB_warm_up -prob_SSD=$probSSD  -YCSB_all_workloads -noYCSB_partitioned -tag=noYCSB_partitioned"
   echo "start master: ssh ${ssh_opts} ${master_host} '$script_compute -sn$master_host  -nid0 | tee -a ${output_file} "
-  ssh ${ssh_opts} ${master_host} "touch /mnt/core_dump/data.blk ; echo '$core_dump_dir/core$master_host' | sudo tee /proc/sys/kernel/core_pattern"
+  ssh ${ssh_opts} ${master_host} "sudo touch /mnt/core_dump/data.blk ; echo '$core_dump_dir/core$master_host' | sudo tee /proc/sys/kernel/core_pattern"
 
   ssh ${ssh_opts} ${master_host} "ulimit -S -c unlimited && $script_compute" &
 #  sleep 1
@@ -101,7 +101,7 @@ launch () {
     script_compute="cd ${bin_dir} && ./ycsb -worker=8 -dramGB=$dramGBCompute -nodes=$numberNodes -messageHandlerThreads=4   -ownIp=$ibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=20 -YCSB_tuple_count=$numTuples -YCSB_zipf_factor=$zipf -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBCompute -YCSB_warm_up -prob_SSD=$probSSD  -YCSB_all_workloads -noYCSB_partitioned -tag=noYCSB_partitioned"
 
     echo "start worker: ssh ${ssh_opts} ${compute} '$script_compute -sn$compute -nid$((2*$i)) | tee -a ${output_file}' &"
-    ssh ${ssh_opts} ${compute} "touch /mnt/core_dump/data.blk ; echo '$core_dump_dir/core$compute' | sudo tee /proc/sys/kernel/core_pattern"
+    ssh ${ssh_opts} ${compute} "sudo touch /mnt/core_dump/data.blk ; echo '$core_dump_dir/core$compute' | sudo tee /proc/sys/kernel/core_pattern"
     ssh ${ssh_opts} ${compute} "ulimit -S -c unlimited && $script_compute | tee -a ${output_file}" &
 #    sleep 1
   done
