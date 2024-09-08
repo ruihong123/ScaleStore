@@ -102,7 +102,7 @@ using namespace scalestore;
 int main(int argc, char* argv[])
 {
    using K = uint64_t;
-   using V = BytesPayload<128>;
+   using V = BytesPayload<8>;
 
    gflags::SetUsageMessage("Catalog Test");
    gflags::ParseCommandLineFlags(&argc, &argv, true);
