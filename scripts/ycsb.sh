@@ -25,7 +25,7 @@ conf_file="../connection.conf"
 #    }' "$conf_file_all" > "$conf_file"
 
 # specify your directory for log files
-output_dir="/users/Ruihong/ScaleStore/scripts/data"
+output_dir="/users/Ruihong/ScaleStore/scripts/"
 core_dump_dir="/mnt/core_dump"
 # working environment
 proj_dir="/users/Ruihong/ScaleStore"
@@ -71,6 +71,7 @@ echo "number of nodes: ${numberNodes}"
 
 launch () {
 #  rm /proj/purduedb-PG0/logs/core
+  output_file="${output_dir}/ycsb_result.log"
   memory_file="${output_dir}/Memory.log"
   for ((i=0;i<${#memory_nodes[@]};i++)); do
         memory=${memory_nodes[$i]}
