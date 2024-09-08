@@ -62,7 +62,7 @@ probSSD=100
 pp=2
 fp=1
 RUNS=1
-ssd_path="/mnt/core_dump/data.blk"
+ssdPath="/mnt/core_dump/data.blk"
 #numacommand="numactl --physcpubind=31" #bind to 1 core
 #numacommand="numactl --physcpubind=28,29,30,31" # bind to 4 cores
 numacommand="" # no limit on the core.
