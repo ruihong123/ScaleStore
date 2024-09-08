@@ -66,10 +66,6 @@ ssd_path="/mnt/core_dump/data.blk"
 
 launch () {
   rm /proj/purduedb-PG0/logs/core
-
-  dist_ratio=$1
-  echo "start tpcc for dist_ratio ${dist_ratio}"
-  output_file="${output_dir}/${dist_ratio}_ycsb.log"
   memory_file="${output_dir}/Memory.log"
   for ((i=0;i<${#memory_nodes[@]};i++)); do
         memory=${memory_nodes[$i]}
