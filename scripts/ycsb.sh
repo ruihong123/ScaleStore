@@ -53,9 +53,9 @@ echo "input Arguments: ${compute_ARGS}"
 echo "launch..."
 
 dramGBCompute=8
-dramGBMemory=24
+dramGBMemory=32
 ssdGBCompute=9
-ssdGBMemory=25
+ssdGBMemory=36
 numberNodes= $(($compute_num+$memory_num))
 zipf=0
 probSSD=100
