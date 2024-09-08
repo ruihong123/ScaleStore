@@ -107,7 +107,7 @@ launch () {
 
   wait
   sleep 3
-  echo "done for ${dist_ratio}"
+  echo "done for ..."
 }
 
 #run_tpcc () {
