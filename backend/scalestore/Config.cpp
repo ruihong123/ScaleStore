@@ -12,7 +12,7 @@ DEFINE_bool(csv, true , "If written to csv file or not");
 DEFINE_string(csvFile, "stats.csv" , "filename for profiling output");
 DEFINE_string(tag,"","descirption of experiment");
 DEFINE_string(ssd_path, "./scalestore", "path to ssd");
-DEFINE_bool(evict_to_ssd, true , "evict to ssd");
+DEFINE_bool(evict_to_ssd, false , "evict to ssd"); //changed according to disaggregated memory setup.
 DEFINE_double(ssd_gib, 100, "Pages on SSD in GB");
 DEFINE_uint32(falloc, 0, "Preallocate GiB");
 DEFINE_uint64(prob_SSD, 1000, "Probability to evict to SSD when page encountered [1-1000]");
