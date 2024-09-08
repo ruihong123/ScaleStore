@@ -63,6 +63,9 @@ pp=2
 fp=1
 RUNS=1
 ssd_path="/mnt/core_dump/data.blk"
+#numacommand="numactl --physcpubind=31" #bind to 1 core
+#numacommand="numactl --physcpubind=28,29,30,31" # bind to 4 cores
+numacommand="" # no limit on the core.
 numTuples=2000000000
 echo "number of nodes: ${numberNodes}"
 
@@ -72,7 +75,7 @@ launch () {
   for ((i=0;i<${#memory_nodes[@]};i++)); do
         memory=${memory_nodes[$i]}
         ssh ${ssh_opts} $memory "sudo ifconfig ib0 192.168.100.$((i+compute_num+1))"
-        script_memory="cd ${bin_dir} && numactl --physcpubind=31 ./MemoryServer -worker=4 -dramGB=$dramGBMemory -nodes=$numberNodes -messageHandlerThreads=4   -ownIp=$memory -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=20 -YCSB_tuple_count=$numTuples -YCSB_zipf_factor=$z -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBMemory -YCSB_warm_up -prob_SSD=$probSSD  -YCSB_all_workloads -noYCSB_partitioned -tag=noYCSB_partitioned > ${output_file} 2>&1"
+        script_memory="cd ${bin_dir} && $numacommand ./MemoryServer -worker=4 -dramGB=$dramGBMemory -nodes=$numberNodes -messageHandlerThreads=4   -ownIp=$memory -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=20 -YCSB_tuple_count=$numTuples -YCSB_zipf_factor=$z -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBMemory -YCSB_warm_up -prob_SSD=$probSSD  -YCSB_all_workloads -noYCSB_partitioned -tag=noYCSB_partitioned > ${output_file} 2>&1"
         echo "start worker: ssh ${ssh_opts} ${memory} '$script_memory' &"
         ssh ${ssh_opts} ${memory} "echo '$core_dump_dir/core$memory' | sudo tee /proc/sys/kernel/core_pattern"
         ssh ${ssh_opts} ${memory} " $script_memory" &
