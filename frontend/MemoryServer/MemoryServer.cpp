@@ -126,11 +126,13 @@ int main(int argc, char* argv[])
 //         });
 //      }
 //      scalestore.getWorkerPool().joinAll();
-//   };
-    while (1){
-        //no operation
-        _mm_pause();
-    }
+//   }
+//    while (1){
+//        //no operation
+//        _mm_pause();
+//    }
+
+//No need to spin because the program will spin in the distructor of the scale store. RemoteGuard will wait for all compute nodes to disconnect.
 
    return 0;
 }
