@@ -64,8 +64,10 @@ fp=1
 RUNS=1
 ssd_path="/mnt/core_dump/data.blk"
 
+echo "number of nodes: ${numberNodes}"
+
 launch () {
-  rm /proj/purduedb-PG0/logs/core
+#  rm /proj/purduedb-PG0/logs/core
   memory_file="${output_dir}/Memory.log"
   for ((i=0;i<${#memory_nodes[@]};i++)); do
         memory=${memory_nodes[$i]}
