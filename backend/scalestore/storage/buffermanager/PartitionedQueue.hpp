@@ -84,9 +84,7 @@ struct PartitionedQueue {
    // -------------------------------------------------------------------------------------
    T pop(BatchHandle& b_handle){
       T result;
-      //TOThink: the code get stuck here need to understand why.
-      while(!try_pop(result,b_handle))
-         ;
+      while(!try_pop(result,b_handle));
       return result;
    }
    // -------------------------------------------------------------------------------------

@@ -172,7 +172,7 @@ int main(int argc, char* argv[])
    u64 YCSB_tuple_count = FLAGS_YCSB_tuple_count;
    // -------------------------------------------------------------------------------------
    // has bee modified according to disaggregated structure.
-   auto nodePartition = partition(scalestore.getNodeID()/2, FLAGS_nodes/2, YCSB_tuple_count);
+   auto nodePartition = partition(scalestore.getNodeID(), FLAGS_nodes/2, YCSB_tuple_count);
    // -------------------------------------------------------------------------------------
    // Build YCSB Table / Tree
    // -------------------------------------------------------------------------------------
