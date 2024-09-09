@@ -263,6 +263,7 @@ int main(int argc, char* argv[])
                         threads::Worker::my().counters.incr_by(profiling::WorkerCounters::latency, (end - start));
                      } else {
                         V payload;
+                        //TODO: delete this line
                          auto success = tree.lookup_opt(key, payload);
                          ensure(success);
                         utils::RandomGenerator::getRandString(reinterpret_cast<u8*>(&payload), sizeof(V));
