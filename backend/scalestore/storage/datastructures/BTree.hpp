@@ -795,6 +795,7 @@ struct BTree {
       node = og_node.asPtr<NodeBase>(0);
       // -------------------------------------------------------------------------------------
       auto& leaf = *reinterpret_cast<Leaf*>(node);
+       assert(k < leaf.fenceKeys.getUpper().key);
       if (g_parent.retry()) goto restart;
       if (og_node.retry()) { goto restartLeaf; }
       // -------------------------------------------------------------------------------------
