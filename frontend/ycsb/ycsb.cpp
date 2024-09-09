@@ -194,6 +194,7 @@ int main(int argc, char* argv[])
          V value;
          for (K k_i = begin; k_i < end; k_i++) {
             utils::RandomGenerator::getRandString(reinterpret_cast<u8*>(&value), sizeof(V));
+            auto success = tree.lookup_opt(k_i, value);
             tree.insert(k_i, value);
             threads::Worker::my().counters.incr(profiling::WorkerCounters::tx_p);
          }

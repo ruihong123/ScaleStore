@@ -86,14 +86,9 @@ function run_bench() {
 #    ssh -o StrictHostKeyChecking=no $node "sudo apt-get install -y libnuma-dev numactl htop libmemcached-dev libboost-all-dev" &
     rsync -a $home_dir $node:$home_dir
 #    ssh -o StrictHostKeyChecking=no $node "killall micro_bench memory_server_term > /dev/null 2>&1"
-    ssh -o StrictHostKeyChecking=no $node "pkill -f ycsb" &
-      ssh -o StrictHostKeyChecking=no $node "pkill -f MemoryServer" &
-    ssh -o StrictHostKeyChecking=no $node "rm $home_dir/scripts/log*" &
-    ssh -o StrictHostKeyChecking=no $node "rm $home_dir/debug/logdump.txt" &
-    ssh -o StrictHostKeyChecking=no $node "rm $home_dir/release/logdump.txt" &
+    ssh -o StrictHostKeyChecking=no $node "pkill -f ycsb; pkill -f MemoryServer; rm $home_dir/scripts/log*; echo '$core_dump_dir/core$node' | sudo tee /proc/sys/kernel/core_pattern" &
 #    ssh ${ssh_opts} $node "sudo mkdir /mnt/core_dump && sudo mkfs.ext4 /dev/sda4 && sudo mount /dev/sda4 /mnt/core_dump"
 
-    ssh ${ssh_opts} $node "echo '$core_dump_dir/core$compute' | sudo tee /proc/sys/kernel/core_pattern" &
 
 #    ssh -o StrictHostKeyChecking=no $node  "sudo mount /dev/sda4 /mnt/core_dump" &
 
@@ -111,14 +106,10 @@ function run_bench() {
 #    ssh -o StrictHostKeyChecking=no $node "sudo apt-get install -y libnuma-dev numactl htop libmemcached-dev libboost-all-dev" &
     rsync -a $home_dir $node:$home_dir
 #    ssh -o StrictHostKeyChecking=no $node "killall micro_bench memory_server_term > /dev/null 2>&1"
-    ssh -o StrictHostKeyChecking=no $node "pkill -f ycsb" &
-    ssh -o StrictHostKeyChecking=no $node "pkill -f MemoryServer" &
-    ssh -o StrictHostKeyChecking=no $node "rm $home_dir/scripts/log*" &
-    ssh -o StrictHostKeyChecking=no $node "rm $home_dir/debug/logdump.txt" &
-    ssh -o StrictHostKeyChecking=no $node "rm $home_dir/release/logdump.txt" &
+    ssh -o StrictHostKeyChecking=no $node "pkill -f ycsb; pkill -f MemoryServer; rm $home_dir/scripts/log*; echo '$core_dump_dir/core$node' | sudo tee /proc/sys/kernel/core_pattern" &
 #    ssh ${ssh_opts} $node "sudo mkdir /mnt/core_dump && sudo mkfs.ext4 /dev/sda4 && sudo mount /dev/sda4 /mnt/core_dump"
 
-    ssh ${ssh_opts} $node "echo '$core_dump_dir/core$compute' | sudo tee /proc/sys/kernel/core_pattern" &
+
 #    ssh ${ssh_opts} $node "sudo ifconfig ib0 192.168.100.$i"
 #    i=$((i+1))
 #    ssh -o StrictHostKeyChecking=no $node  "sudo mount /dev/sda4 /mnt/core_dump" &
@@ -128,9 +119,9 @@ function run_bench() {
 #    ssh -o StrictHostKeyChecking=no $node "echo '/proj/purduedb-PG0/logs/core$node' | sudo tee /proc/sys/kernel/core_pattern"
   done
 
-  read -r -a memcached_node <<< $(head -n 1 $SRC_HOME/memcached_ip.conf)
-  echo "restart memcached on ${memcached_node[0]}"
-  ssh -o StrictHostKeyChecking=no ${memcached_node[0]} "sudo service memcached restart"
+#  read -r -a memcached_node <<< $(head -n 1 $SRC_HOME/memcached_ip.conf)
+#  echo "restart memcached on ${memcached_node[0]}"
+#  ssh -o StrictHostKeyChecking=no ${memcached_node[0]} "sudo service memcached restart"
 
 
 #  systemctl status opensmd.service
