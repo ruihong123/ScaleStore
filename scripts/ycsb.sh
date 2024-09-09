@@ -90,7 +90,7 @@ launch () {
   ssh ${ssh_opts} $master_host "sudo ifconfig ib0 $hostibip"
 
   script_compute="cd ${bin_dir} && ./ycsb -worker=$workernum -dramGB=$dramGBCompute -nodes=$numberNodes -messageHandlerThreads=4   -ownIp=$hostibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=20 -YCSB_tuple_count=$numTuples -YCSB_zipf_factor=$zipf -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBCompute -YCSB_warm_up -prob_SSD=$probSSD  -YCSB_all_workloads -noYCSB_partitioned -tag=noYCSB_partitioned"
-  echo "start master: ssh ${ssh_opts} ${master_host} '$script_compute -sn$master_host  -nid0 | tee -a ${output_file} "
+  echo "start master: ssh ${ssh_opts} ${master_host} '$script_compute -sn$master_host | tee -a ${output_file} "
   ssh ${ssh_opts} ${master_host} "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk ; echo '$core_dump_dir/core$master_host' | sudo tee /proc/sys/kernel/core_pattern"
 
   ssh ${ssh_opts} ${master_host} "ulimit -S -c unlimited && $script_compute" &
@@ -102,7 +102,7 @@ launch () {
     ssh ${ssh_opts} $compute "sudo ifconfig ib0 $ibip"
     script_compute="cd ${bin_dir} && ./ycsb -worker=$workernum -dramGB=$dramGBCompute -nodes=$numberNodes -messageHandlerThreads=4   -ownIp=$ibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=20 -YCSB_tuple_count=$numTuples -YCSB_zipf_factor=$zipf -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBCompute -YCSB_warm_up -prob_SSD=$probSSD  -YCSB_all_workloads -noYCSB_partitioned -tag=noYCSB_partitioned"
 
-    echo "start worker: ssh ${ssh_opts} ${compute} '$script_compute -sn$compute -nid$((2*$i)) | tee -a ${output_file}' &"
+    echo "start worker: ssh ${ssh_opts} ${compute} '$script_compute | tee -a ${output_file}' &"
     ssh ${ssh_opts} ${compute} "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk ; echo '$core_dump_dir/core$compute' | sudo tee /proc/sys/kernel/core_pattern"
     ssh ${ssh_opts} ${compute} "ulimit -S -c unlimited && $script_compute | tee -a ${output_file}" &
 #    sleep 1
