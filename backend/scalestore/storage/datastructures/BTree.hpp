@@ -777,7 +777,7 @@ struct BTree {
          // -------------------------------------------------------------------------------------
          if (g_parent.retry())
             goto restart;
-         assert(k>inner.fenceKeys.getLower());
+         assert(k>inner.fenceKeys.getLower().key);
          currentPID = inner.children[inner.lowerBoundBF(k)];
          if (g_node.retry())
             goto restart;  // check inner
