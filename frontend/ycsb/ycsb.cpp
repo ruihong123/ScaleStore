@@ -194,8 +194,6 @@ int main(int argc, char* argv[])
          V value;
          for (K k_i = begin; k_i < end; k_i++) {
             utils::RandomGenerator::getRandString(reinterpret_cast<u8*>(&value), sizeof(V));
-            auto success = tree.lookup_opt(k_i, value);
-            ensure(success);
             tree.insert(k_i, value);
             threads::Worker::my().counters.incr(profiling::WorkerCounters::tx_p);
          }
@@ -265,8 +263,11 @@ int main(int argc, char* argv[])
                         threads::Worker::my().counters.incr_by(profiling::WorkerCounters::latency, (end - start));
                      } else {
                         V payload;
+                         auto success = tree.lookup_opt(key, payload);
+                         ensure(success);
                         utils::RandomGenerator::getRandString(reinterpret_cast<u8*>(&payload), sizeof(V));
                         auto start = utils::getTimePoint();
+
                         tree.insert(key, payload);
                         auto end = utils::getTimePoint();
                         threads::Worker::my().counters.incr_by(profiling::WorkerCounters::latency, (end - start));
