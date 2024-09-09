@@ -197,6 +197,10 @@ int main(int argc, char* argv[])
             tree.insert(k_i, value);
             threads::Worker::my().counters.incr(profiling::WorkerCounters::tx_p);
          }
+          for (K k_i = begin; k_i < end; k_i++) {
+              auto success = tree.lookup_opt(k_i, value);
+              ensure(success);
+          }
          // -------------------------------------------------------------------------------------
          barrier.wait();
       });
