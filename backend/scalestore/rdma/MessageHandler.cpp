@@ -361,8 +361,9 @@ void MessageHandler::startThread() {
                   }
                   case MESSAGE_TYPE::RAR: {
                       //for debug purpose
+                      //TODO:
                       assert(bm.nodeId >= 8);
-                     auto& request = *reinterpret_cast<RemoteAllocationRequest*>(ctx.request);
+//                     auto& request = *reinterpret_cast<RemoteAllocationRequest*>(ctx.request);
                      // -------------------------------------------------------------------------------------
                      PID pid = bm.pidFreeList.pop(threads::ThreadContext::my().pid_handle);
                      // -------------------------------------------------------------------------------------
