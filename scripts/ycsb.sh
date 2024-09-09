@@ -93,7 +93,7 @@ launch () {
   echo "start master: ssh ${ssh_opts} ${master_host} '$script_compute -sn$master_host | tee -a ${output_file} "
   ssh ${ssh_opts} ${master_host} "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk ; echo '$core_dump_dir/core$master_host' | sudo tee /proc/sys/kernel/core_pattern"
 
-  ssh ${ssh_opts} ${master_host} "ulimit -S -c unlimited && $script_compute" &
+  ssh ${ssh_opts} ${master_host} "ulimit -S -c unlimited && $script_compute | tee -a ${output_file} " &
 #  sleep 1
 
   for ((i=1;i<${#compute_nodes[@]};i++)); do
