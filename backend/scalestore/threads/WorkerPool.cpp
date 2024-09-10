@@ -45,10 +45,11 @@ WorkerPool::WorkerPool(rdma::CM<rdma::InitMessage>& cm, NodeID nodeId): workers(
 
    
    if(FLAGS_pinThreads){
-      for (auto& t : workerThreads) {
-         threads::CoreManager::getInstance().pinThreadRoundRobin(t.native_handle());
-            // threads::CoreManager::getInstance().pinThreadToCore(t.native_handle());
-      }
+       // commented out because we need to numa limit the cores that this program use
+//      for (auto& t : workerThreads) {
+//         threads::CoreManager::getInstance().pinThreadRoundRobin(t.native_handle());
+//            // threads::CoreManager::getInstance().pinThreadToCore(t.native_handle());
+//      }
    }
 
    
