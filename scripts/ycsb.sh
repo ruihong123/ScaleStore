@@ -83,7 +83,7 @@ launch () {
         #todo change the ownership of the /mnt/core_dump directory.
 
         ssh ${ssh_opts} ${memory} "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk && echo '$core_dump_dir/core$memory' | sudo tee /proc/sys/kernel/core_pattern"
-        ssh ${ssh_opts} ${memory} " $script_memory" &
+        ssh ${ssh_opts} ${memory} "ulimit -S -c unlimited &&  $script_memory" &
         sleep 1
   done
   hostibip="192.168.100.1"
