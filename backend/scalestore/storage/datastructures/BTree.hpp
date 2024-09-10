@@ -777,7 +777,7 @@ struct BTree {
          // -------------------------------------------------------------------------------------
          if (g_parent.retry())
             goto restart;
-         assert(k>inner.fenceKeys.getLower().key);
+         assert(k>=inner.fenceKeys.getLower().key);
          currentPID = inner.children[inner.lowerBoundBF(k)];
          if (g_node.retry())
             goto restart;  // check inner
@@ -795,7 +795,7 @@ struct BTree {
       node = og_node.asPtr<NodeBase>(0);
       // -------------------------------------------------------------------------------------
       auto& leaf = *reinterpret_cast<Leaf*>(node);
-       assert(k < leaf.fenceKeys.getUpper().key);
+       assert(k <= leaf.fenceKeys.getUpper().key);
       if (g_parent.retry()) goto restart;
       if (og_node.retry()) { goto restartLeaf; }
       // -------------------------------------------------------------------------------------
