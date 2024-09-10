@@ -197,10 +197,10 @@ int main(int argc, char* argv[])
             tree.insert(k_i, value);
             threads::Worker::my().counters.incr(profiling::WorkerCounters::tx_p);
          }
-          for (K k_i = begin; k_i < end; k_i++) {
-              auto success = tree.lookup_opt(k_i, value);
-              ensure(success);
-          }
+//          for (K k_i = begin; k_i < end; k_i++) {
+//              auto success = tree.lookup_opt(k_i, value);
+//              ensure(success);
+//          }
          // -------------------------------------------------------------------------------------
          barrier.wait();
       });
@@ -264,8 +264,8 @@ int main(int argc, char* argv[])
                      } else {
                         V payload;
                         //TODO: delete this line
-                         auto success = tree.lookup_opt(key, payload);
-                         ensure(success);
+//                         auto success = tree.lookup_opt(key, payload);
+//                         ensure(success);
                         utils::RandomGenerator::getRandString(reinterpret_cast<u8*>(&payload), sizeof(V));
                         auto start = utils::getTimePoint();
 
