@@ -62,6 +62,7 @@ probSSD=100
 pp=2
 fp=1
 RUNS=1
+Runtime=40
 ssdPath="/mnt/core_dump/data.blk"
 #numacommand="numactl --physcpubind=31" #bind to 1 core
 #numacommand="numactl --physcpubind=28,29,30,31" # bind to 4 cores
@@ -77,7 +78,7 @@ launch () {
         memory=${memory_nodes[$i]}
         ibip="192.168.100.$((i+compute_num+1))"
         ssh ${ssh_opts} $memory "sudo ifconfig ib0 $ibip"
-        script_memory="cd ${bin_dir} && $numacommand ./MemoryServer -worker=$workernum -dramGB=$dramGBMemory -nodes=$numberNodes -messageHandlerThreads=4   -ownIp=$ibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=20 -YCSB_tuple_count=$numTuples -YCSB_zipf_factor=$zipf -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBMemory -YCSB_warm_up -prob_SSD=$probSSD  -YCSB_all_workloads -noYCSB_partitioned -tag=noYCSB_partitioned > ${output_file} 2>&1"
+        script_memory="cd ${bin_dir} && $numacommand ./MemoryServer -worker=$workernum -dramGB=$dramGBMemory -nodes=$numberNodes -messageHandlerThreads=4   -ownIp=$ibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=$Runtime -YCSB_tuple_count=$numTuples -YCSB_zipf_factor=$zipf -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBMemory -YCSB_warm_up -prob_SSD=$probSSD  -YCSB_all_workloads -noYCSB_partitioned -tag=noYCSB_partitioned > ${output_file} 2>&1"
         echo "start worker: ssh ${ssh_opts} ${memory} '$script_memory' &"
         #todo change the ownership of the /mnt/core_dump directory.
 
@@ -89,7 +90,7 @@ launch () {
 
   ssh ${ssh_opts} $master_host "sudo ifconfig ib0 $hostibip"
 
-  script_compute="cd ${bin_dir} && ./ycsb -worker=$workernum -dramGB=$dramGBCompute -nodes=$numberNodes -messageHandlerThreads=4   -ownIp=$hostibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=20 -YCSB_tuple_count=$numTuples -YCSB_zipf_factor=$zipf -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBCompute -YCSB_warm_up -prob_SSD=$probSSD  -YCSB_all_workloads -noYCSB_partitioned -tag=noYCSB_partitioned"
+  script_compute="cd ${bin_dir} && ./ycsb -worker=$workernum -dramGB=$dramGBCompute -nodes=$numberNodes -messageHandlerThreads=4   -ownIp=$hostibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=$Runtime -YCSB_tuple_count=$numTuples -YCSB_zipf_factor=$zipf -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBCompute -YCSB_warm_up -prob_SSD=$probSSD  -YCSB_all_workloads -noYCSB_partitioned -tag=noYCSB_partitioned"
   echo "start master: ssh ${ssh_opts} ${master_host} '$script_compute | tee -a ${output_file} "
   ssh ${ssh_opts} ${master_host} "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk ; echo '$core_dump_dir/core$master_host' | sudo tee /proc/sys/kernel/core_pattern"
 
@@ -100,7 +101,7 @@ launch () {
     compute=${compute_nodes[$i]}
     ibip="192.168.100.$((i+1))"
     ssh ${ssh_opts} $compute "sudo ifconfig ib0 $ibip"
-    script_compute="cd ${bin_dir} && ./ycsb -worker=$workernum -dramGB=$dramGBCompute -nodes=$numberNodes -messageHandlerThreads=4   -ownIp=$ibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=20 -YCSB_tuple_count=$numTuples -YCSB_zipf_factor=$zipf -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBCompute -YCSB_warm_up -prob_SSD=$probSSD  -YCSB_all_workloads -noYCSB_partitioned -tag=noYCSB_partitioned"
+    script_compute="cd ${bin_dir} && ./ycsb -worker=$workernum -dramGB=$dramGBCompute -nodes=$numberNodes -messageHandlerThreads=4   -ownIp=$ibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=$Runtime -YCSB_tuple_count=$numTuples -YCSB_zipf_factor=$zipf -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBCompute -YCSB_warm_up -prob_SSD=$probSSD  -YCSB_all_workloads -noYCSB_partitioned -tag=noYCSB_partitioned"
 
     echo "start worker: ssh ${ssh_opts} ${compute} '$script_compute | tee -a ${output_file}' &"
     ssh ${ssh_opts} ${compute} "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk ; echo '$core_dump_dir/core$compute' | sudo tee /proc/sys/kernel/core_pattern"
