@@ -59,24 +59,24 @@ ssdGBMemory=36
 numberNodes=$(($compute_num + $memory_num))
 zipf=0 #[0~1]
 probSSD=100
-pp=2 # default 2
+pp=1 # default 2
 fp=1
-messagehdt=4 # default 4
+messagehdt=1 # default 4
 RUNS=1
 Runtime=40
 ssdPath="/mnt/core_dump/data.blk"
-#numacommand="numactl --physcpubind=31" #bind to 1 core
+numacommand="numactl --physcpubind=31" #bind to 1 core
 #numacommand="numactl --physcpubind=30,31" #bind to 2 core
-numacommand="numactl --physcpubind=28,29,30,31" # bind to 4 cores
+#numacommand="numactl --physcpubind=28,29,30,31" # bind to 4 cores
 
-numacommand="numactl --physcpubind=26,27,28,29,30,31" # bind to 4 cores
+#numacommand="numactl --physcpubind=26,27,28,29,30,31" # bind to 4 cores
 #numacommand="" # no limit on the core.
 numTuples=2000000000
 echo "number of nodes: ${numberNodes}"
 
 launch () {
 #  rm /proj/purduedb-PG0/logs/core
-  output_file="${output_dir}/ycsb_result_6cores_default.log"
+  output_file="${output_dir}/ycsb_result_1core.log"
   memory_file="${output_dir}/Memory.log"
   for ((i=0;i<${#memory_nodes[@]};i++)); do
         memory=${memory_nodes[$i]}
