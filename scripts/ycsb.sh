@@ -76,7 +76,7 @@ echo "number of nodes: ${numberNodes}"
 
 launch () {
 #  rm /proj/purduedb-PG0/logs/core
-  output_file="${output_dir}/ycsb_result_1core.log"
+  output_file="${output_dir}/ycsb_result_unlimited.log"
   memory_file="${output_dir}/Memory.log"
   for ((i=0;i<${#memory_nodes[@]};i++)); do
         memory=${memory_nodes[$i]}
