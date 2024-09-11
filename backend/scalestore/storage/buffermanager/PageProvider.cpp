@@ -744,11 +744,11 @@ void PageProvider::startThread() {
          // -------------------------------------------------------------------------------------
          threadCount--;
       });
-//      // pin threads
-//      if ((t_i % 2) == 0)
-//         threads::CoreManager::getInstance().pinThreadToCore(pp_threads.back().native_handle());
-//      else
-//         threads::CoreManager::getInstance().pinThreadToHT(pp_threads.back().native_handle());
+      // pin threads
+      if ((t_i % 2) == 0)
+         threads::CoreManager::getInstance().pinThreadToCore(pp_threads.back().native_handle());
+      else
+         threads::CoreManager::getInstance().pinThreadToHT(pp_threads.back().native_handle());
    }
    // -------------------------------------------------------------------------------------
 }
