@@ -28,7 +28,7 @@ struct RemoteGuard{
    RemoteGuard(std::atomic<uint64_t>& numberRemoteConnected) : numberRemoteConnected(numberRemoteConnected), total_connection(numberRemoteConnected){};
    ~RemoteGuard(){
        while(numberRemoteConnected >= total_connection/2){
-           usleep(1);
+//           usleep(1);
        }
    }
 };
