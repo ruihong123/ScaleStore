@@ -413,8 +413,9 @@ void MessageHandler::startThread() {
                threads::CoreManager::getInstance().pinThreadToCore(t.native_handle());
            else
                threads::CoreManager::getInstance().pinThreadToHT(t.native_handle());
-           t.detach();
+
        }
+       t.detach();
 
    }
 }
