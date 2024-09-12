@@ -129,6 +129,7 @@ run() {
 #    echo `cat $slaves`
     echo $compute_num
     echo $memory_num
+    numberNodes=$(($compute_num + $memory_num))
   	read -r -a memcached_node <<< $(head -n 1 $SRC_HOME/memcached_ip.conf)
   	echo "restart memcached on ${memcached_node[0]}"
     ssh -o StrictHostKeyChecking=no ${memcached_node[0]} "sudo service memcached restart"
@@ -173,7 +174,7 @@ run() {
         ssh ${ssh_opts} $compute "sudo ifconfig ib0 $ibip"
         script_compute="cd ${bin_dir} && ./microbench -worker=$workernum -dramGB=$dramGBCompute -nodes=$numberNodes -messageHandlerThreads=$messagehdt   -ownIp=$ibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBCompute -prob_SSD=$probSSD  -all_workloads=true -zip_workload=$workload -zipfian_param=$zipfian_alpha -space_locality=$space_locality -shared_ratio=$shared_ratio -allocated_mem_size=$remote_mem_size"
 
-        echo "start worker: ssh ${ssh_opts} ${compute} '$script_compute | tee -a ${output_file}' &"
+        echo "start worker: ssh ${ssh_opts} ${compute} '$script_compute | tee -a $log_file.$ip' &"
         ssh ${ssh_opts} ${compute} "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk ; echo '$core_dump_dir/core$compute' | sudo tee /proc/sys/kernel/core_pattern"
         ssh ${ssh_opts} ${compute} "ulimit -S -c unlimited && $script_compute | tee -a $log_file.$ip" &
         i=$((i+1))
