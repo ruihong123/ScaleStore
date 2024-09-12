@@ -587,12 +587,15 @@ void Benchmark(int id, ScaleStore *alloc, PID *data, Memcached *memcached, uint3
     std::unordered_map<uint64_t , int> addr_to_pos;
 
     // gernerate 2*Iteration access target, half for warm up half for the real test
-    PID* access = (PID*) malloc(sizeof(PID) * 2*ITERATION);
-//    Memcached memcached;
-    //bool shared[STEPS];
-    bool* shared = (bool*) malloc(sizeof(bool) * STEPS);
+    static PID* access = nullptr;
+    static bool* shared = nullptr;
+    if (!access){
+        assert(shared == nullptr);
+        access = (PID*) malloc(sizeof(PID) * 2*ITERATION);
+        shared = (bool*) malloc(sizeof(bool) * STEPS);
+        Init(memcached, data, access, shared, id, &seedp);
+    }
 
-    Init(memcached, data, access, shared, id, &seedp);
 
     auto& catalog = alloc->getCatalog();
     printf("start warmup the benchmark on thread %d", id);
