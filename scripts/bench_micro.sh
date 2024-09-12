@@ -30,12 +30,12 @@ RUNS=1
 Runtime=40
 ssdPath="/mnt/core_dump/data.blk"
 
-#numacommand="numactl --physcpubind=31" #bind to 1 core
+numacommand="numactl --physcpubind=31" #bind to 1 core
 #numacommand="numactl --physcpubind=30,31" #bind to 2 core
 #numacommand="numactl --physcpubind=28,29,30,31" # bind to 4 cores
 
 #numacommand="numactl --physcpubind=26,27,28,29,30,31" # bind to 4 cores
-numacommand="" # no limit on the core.
+#numacommand="" # no limit on the core.
 
 run() {
     echo "run for result_file=$result_file,
