@@ -146,7 +146,7 @@ run() {
 #            	port=`echo $memory | cut -d ' ' -f2`
           ibip="192.168.100.$((i+compute_num+1))"
           ssh ${ssh_opts} $memory "sudo ifconfig ib0 $ibip"
-          script_memory="cd ${bin_dir} && $numacommand ./MemoryServer -worker=$workernum -dramGB=$dramGBMemory -nodes=$numberNodes -messageHandlerThreads=$messagehdt   -ownIp=$ibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=$Runtime -YCSB_tuple_count=$numTuples -YCSB_zipf_factor=$zipf -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBMemory -prob_SSD=$probSSD > $log_file.$ip 2>&1"
+          script_memory="cd ${bin_dir} && $numacommand ./MemoryServer -worker=$workernum -dramGB=$dramGBMemory -nodes=$numberNodes -messageHandlerThreads=$messagehdt   -ownIp=$ibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBMemory -prob_SSD=$probSSD > $log_file.$ip 2>&1"
           echo "start worker: ssh ${ssh_opts} ${memory} '$script_memory' &"
           ssh ${ssh_opts} ${memory} "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk && echo '$core_dump_dir/core$memory' | sudo tee /proc/sys/kernel/core_pattern"
           ssh ${ssh_opts} ${memory} "ulimit -S -c unlimited &&  $script_memory" &
