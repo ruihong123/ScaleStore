@@ -86,7 +86,11 @@ function run_bench() {
 #    ssh -o StrictHostKeyChecking=no $node "sudo apt-get install -y libnuma-dev numactl htop libmemcached-dev libboost-all-dev" &
     rsync -a $home_dir $node:$home_dir
 #    ssh -o StrictHostKeyChecking=no $node "killall micro_bench memory_server_term > /dev/null 2>&1"
-    ssh -o StrictHostKeyChecking=no $node "pkill -f ycsb; pkill -f MemoryServer; pkill -f microbench; rm $home_dir/scripts/log*; echo '$core_dump_dir/core$node' | sudo tee /proc/sys/kernel/core_pattern" &
+    ssh -o StrictHostKeyChecking=no $node "rm $home_dir/scripts/log*; echo '$core_dump_dir/core$node' | sudo tee /proc/sys/kernel/core_pattern" &
+    ssh -o StrictHostKeyChecking=no $node "pkill -f ycsb" &
+    ssh -o StrictHostKeyChecking=no $node "pkill -f microbench" &
+    ssh -o StrictHostKeyChecking=no $node "pkill -f MemoryServer" &
+    #pkill need to be run separately because it can kill the connection of itself
 #    ssh ${ssh_opts} $node "sudo mkdir /mnt/core_dump && sudo mkfs.ext4 /dev/sda4 && sudo mount /dev/sda4 /mnt/core_dump"
 
 
@@ -106,7 +110,10 @@ function run_bench() {
 #    ssh -o StrictHostKeyChecking=no $node "sudo apt-get install -y libnuma-dev numactl htop libmemcached-dev libboost-all-dev" &
     rsync -a $home_dir $node:$home_dir
 #    ssh -o StrictHostKeyChecking=no $node "killall micro_bench memory_server_term > /dev/null 2>&1"
-    ssh -o StrictHostKeyChecking=no $node "pkill -f ycsb; pkill -f MemoryServer; pkill -f microbench;rm $home_dir/scripts/log*; rm $home_dir/build/ycsb_data_scalability_new_hashtable.csv; echo '$core_dump_dir/core$node' | sudo tee /proc/sys/kernel/core_pattern" &
+    ssh -o StrictHostKeyChecking=no $node "rm $home_dir/scripts/log*; rm $home_dir/build/ycsb_data_scalability_new_hashtable.csv; echo '$core_dump_dir/core$node' | sudo tee /proc/sys/kernel/core_pattern" &
+    ssh -o StrictHostKeyChecking=no $node "pkill -f ycsb" &
+    ssh -o StrictHostKeyChecking=no $node "pkill -f microbench" &
+    ssh -o StrictHostKeyChecking=no $node "pkill -f MemoryServer" &
 #    ssh ${ssh_opts} $node "sudo mkdir /mnt/core_dump && sudo mkfs.ext4 /dev/sda4 && sudo mount /dev/sda4 /mnt/core_dump"
 
 
