@@ -14,8 +14,29 @@ remote_mem_size_base=48 # 48 gb Remote memory size
 #master_ip=db3.cs.purdue.edu # make sure this is in accordance with the server whose is_master=1
 master_port=12311
 port=$((10000+RANDOM%1000))
-#compute_num = 0
-#memory_num = 0
+
+workernum=8
+dramGBCompute=8
+dramGBMemory=32
+ssdGBCompute=9
+ssdGBMemory=36
+numberNodes=$(($compute_num + $memory_num))
+#zipf=0 #[0~1]
+probSSD=100
+pp=2 # default 2
+fp=1
+messagehdt=4 # default 4
+RUNS=1
+Runtime=40
+ssdPath="/mnt/core_dump/data.blk"
+
+#numacommand="numactl --physcpubind=31" #bind to 1 core
+#numacommand="numactl --physcpubind=30,31" #bind to 2 core
+#numacommand="numactl --physcpubind=28,29,30,31" # bind to 4 cores
+
+#numacommand="numactl --physcpubind=26,27,28,29,30,31" # bind to 4 cores
+numacommand="" # no limit on the core.
+
 run() {
     echo "run for result_file=$result_file,
     thread=$thread, zipfian_alpha=$zipfian_alpha, workload=$workload,
@@ -121,11 +142,12 @@ run() {
         do
           ip=$memory
 #            	port=`echo $memory | cut -d ' ' -f2`
-          echo ""
-          echo "memory = $memory, ip = $ip, port = $port"
-          echo "$BIN_HOME/memory_server_term  $port $(($remote_mem_size+10)) $((2*$i +1)) $remote_mem_size | tee -a $log_file.$ip"
-          ssh -o StrictHostKeyChecking=no $ip	"ulimit -c 1000 && cd $BIN_HOME && numactl --physcpubind=31 ./memory_server_term  $port $(($remote_mem_size+10)) $((2*$i +1)) $remote_mem_size | tee -a $log_file.$ip " &
-          sleep 1
+          ibip="192.168.100.$((i+compute_num+1))"
+          ssh ${ssh_opts} $memory "sudo ifconfig ib0 $ibip"
+          script_memory="cd ${bin_dir} && $numacommand ./MemoryServer -worker=$workernum -dramGB=$dramGBMemory -nodes=$numberNodes -messageHandlerThreads=$messagehdt   -ownIp=$ibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=$Runtime -YCSB_tuple_count=$numTuples -YCSB_zipf_factor=$zipf -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBMemory -prob_SSD=$probSSD > $log_file.$ip 2>&1"
+          echo "start worker: ssh ${ssh_opts} ${memory} '$script_memory' &"
+          ssh ${ssh_opts} ${memory} "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk && echo '$core_dump_dir/core$memory' | sudo tee /proc/sys/kernel/core_pattern"
+          ssh ${ssh_opts} ${memory} "ulimit -S -c unlimited &&  $script_memory" &
           i=$((i+1))
 #        	if [ "$i" = "$node" ]; then
 #        		break
@@ -145,15 +167,15 @@ run() {
 #        if [ $port == $ip ]; then
 #          port=12345
 #        fi
-        echo ""
-        echo "compute = $compute, ip = $ip, port = $port"
-        echo "$BIN_HOME/micro_bench --op_type $op_type --workload $workload --zipfian_alpha $zipfian_alpha --no_thread $thread --shared_ratio $shared_ratio --read_ratio $read_ratio --space_locality $space_locality --time_locality $time_locality --result_file $result_file --this_node_id $((2*$i)) --tcp_port $port --is_master $is_master --cache_size $cache_mem_size --allocated_mem_size $remote_mem_size --compute_num $compute_num --memory_num $memory_num | tee -a $log_file.$ip"
-        ssh -o StrictHostKeyChecking=no $ip	"ulimit -c 50000000 && cd $BIN_HOME && ./micro_bench --op_type $op_type --workload $workload --zipfian_alpha $zipfian_alpha --no_thread $thread --shared_ratio $shared_ratio --read_ratio $read_ratio --space_locality $space_locality --time_locality $time_locality --result_file $result_file --this_node_id $((2*$i)) --tcp_port $port --is_master $is_master --cache_size $cache_mem_size --allocated_mem_size $remote_mem_size --compute_num $compute_num --memory_num $memory_num | tee -a $log_file.$ip" &
-        sleep 1
+
+        ibip="192.168.100.$((i+1))"
+        ssh ${ssh_opts} $compute "sudo ifconfig ib0 $ibip"
+        script_compute="cd ${bin_dir} && ./microbench -worker=$workernum -dramGB=$dramGBCompute -nodes=$numberNodes -messageHandlerThreads=$messagehdt   -ownIp=$ibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -YCSB_run_for_seconds=$Runtime -YCSB_tuple_count=$numTuples -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBCompute -prob_SSD=$probSSD  -all_workloads=true -zip_workload=$workload -zipfian_param=$zipfian_alpha -space_locality=$space_locality -shared_ratio=$shared_ratio -allocated_mem_size=$remote_mem_size"
+
+        echo "start worker: ssh ${ssh_opts} ${compute} '$script_compute | tee -a ${output_file}' &"
+        ssh ${ssh_opts} ${compute} "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk ; echo '$core_dump_dir/core$compute' | sudo tee /proc/sys/kernel/core_pattern"
+        ssh ${ssh_opts} ${compute} "ulimit -S -c unlimited && $script_compute | tee -a $log_file.$ip" &
         i=$((i+1))
-  #    	if [ "$i" = "$node" ]; then
-  #    		break
-  #    	fi
       done # for compute
 
 	  wait

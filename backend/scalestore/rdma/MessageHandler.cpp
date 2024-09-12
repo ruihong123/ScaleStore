@@ -408,11 +408,14 @@ void MessageHandler::startThread() {
       });
 
       // threads::CoreManager::getInstance().pinThreadToCore(t.native_handle());
-      if ((t_i % 2) == 0)
-         threads::CoreManager::getInstance().pinThreadToCore(t.native_handle());
-      else
-         threads::CoreManager::getInstance().pinThreadToHT(t.native_handle());
-      t.detach();
+       if (nodeId <= FLAGS_nodes/2){
+           if ((t_i % 2) == 0)
+               threads::CoreManager::getInstance().pinThreadToCore(t.native_handle());
+           else
+               threads::CoreManager::getInstance().pinThreadToHT(t.native_handle());
+           t.detach();
+       }
+
    }
 }
 // -------------------------------------------------------------------------------------
