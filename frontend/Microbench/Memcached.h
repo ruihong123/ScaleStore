@@ -22,7 +22,7 @@ public:
         memcached_server_st *servers = NULL;
         memcached_return rc;
 
-        std::ifstream conf("../memcached_ip.conf");
+        std::ifstream conf("../../memcached_ip.conf");
 
         if (!conf) {
             fprintf(stderr, "can't open memcached_ip.conf\n");
