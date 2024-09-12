@@ -672,7 +672,11 @@ int main(int argc, char* argv[]) {
     node_id = ddsm.getNodeID();
     printf("This node id is %d\n", node_id);
     if (node_id == 0){
-        ddsm.createBarrier(FLAGS_worker * FLAGS_nodes/2);
+        ddsm.getWorkerPool().scheduleJobSync(0, [&]() {
+            ddsm.createBarrier(FLAGS_worker * FLAGS_nodes/2);
+
+        });
+
     }
     std::vector<uint32_t> workloads;
     if(FLAGS_all_workloads){
