@@ -122,13 +122,13 @@ class ScaleStore
    std::unique_ptr<storage::Buffermanager> bm;
    std::unique_ptr<rdma::MessageHandler> mh;
    std::unique_ptr<storage::PageProvider> pp;
-   std::unique_ptr<RemoteGuard> rGuard;
    std::unique_ptr<threads::WorkerPool> workerPool;
    std::unique_ptr<profiling::BMCounters> bmCounters;
    std::unique_ptr<profiling::RDMACounters> rdmaCounters;
    std::unique_ptr<storage::Catalog> catalog;
    profiling::ProfilingThread pt;
    std::vector<std::thread> profilingThread;
+   std::unique_ptr<RemoteGuard> rGuard; // put the guart in the end to avoid deallocation in the memory nodes
 };
 // -------------------------------------------------------------------------------------
 }  // namespace scalestore
