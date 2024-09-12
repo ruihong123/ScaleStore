@@ -189,7 +189,6 @@ struct BTreeLeaf : public BTreeLeafBase {
       // -------------------------------------------------------------------------------------
       ensure(count == maxEntries);
       // -------------------------------------------------------------------------------------
-      //TODO: this should be ExclusiveBFGuard(remote_node_id).
       ExclusiveBFGuard xg_leaf;
       auto& newLeaf = xg_leaf.allocate<BTreeLeaf>();
       newLeaf.count = count - (count / 2);

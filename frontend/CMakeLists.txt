@@ -69,4 +69,7 @@ add_executable(MemoryServer MemoryServer/MemoryServer.cpp)
 add_dependencies(MemoryServer scalestore)
 target_link_libraries(MemoryServer scalestore numa)
 
+add_executable(microbench Microbench/microbench.cpp Microbench/Memcached.h Microbench/zipf.h)
+add_dependencies(microbench scalestore)
+target_link_libraries(microbench scalestore numa -lmemcached)
 
