@@ -11,12 +11,12 @@ conf_file=$bin/../connection.conf
 #memory_nodes=$bin/memory_nodes
 log_file=$bin/log
 cache_mem_size=16 # 8 gb Local memory size
-remote_mem_size_base=8 # 48 gb Remote memory size
+remote_mem_size_base=1 # 48 gb Remote memory size
 #master_ip=db3.cs.purdue.edu # make sure this is in accordance with the server whose is_master=1
 master_port=12311
 port=$((10000+RANDOM%1000))
 
-workernum=8
+#workernum=8
 dramGBCompute=8
 dramGBMemory=32
 ssdGBCompute=9
@@ -146,7 +146,7 @@ run() {
 #            	port=`echo $memory | cut -d ' ' -f2`
           ibip="192.168.100.$((i+compute_num+1))"
           ssh ${ssh_opts} $memory "sudo ifconfig ib0 $ibip"
-          script_memory="cd ${bin_dir} && $numacommand ./MemoryServer -worker=$workernum -dramGB=$dramGBMemory -nodes=$numberNodes -messageHandlerThreads=$messagehdt   -ownIp=$ibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBMemory -prob_SSD=$probSSD > $log_file.$ip 2>&1"
+          script_memory="cd ${bin_dir} && $numacommand ./MemoryServer -worker=$thread -dramGB=$dramGBMemory -nodes=$numberNodes -messageHandlerThreads=$messagehdt   -ownIp=$ibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBMemory -prob_SSD=$probSSD > $log_file.$ip 2>&1"
           echo "start worker: ssh ${ssh_opts} ${memory} '$script_memory' &"
           ssh ${ssh_opts} ${memory} "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk && echo '$core_dump_dir/core$memory' | sudo tee /proc/sys/kernel/core_pattern"
           ssh ${ssh_opts} ${memory} "ulimit -S -c unlimited &&  $script_memory" &
@@ -172,7 +172,7 @@ run() {
 
         ibip="192.168.100.$((i+1))"
         ssh ${ssh_opts} $compute "sudo ifconfig ib0 $ibip"
-        script_compute="cd ${bin_dir} && ./microbench -worker=$workernum -dramGB=$dramGBCompute -nodes=$numberNodes -messageHandlerThreads=$messagehdt   -ownIp=$ibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBCompute -prob_SSD=$probSSD  -all_workloads=true -zip_workload=$workload -zipfian_param=$zipfian_alpha -space_locality=$space_locality -shared_ratio=$shared_ratio -allocated_mem_size=$remote_mem_size"
+        script_compute="cd ${bin_dir} && ./microbench -worker=$thread -dramGB=$dramGBCompute -nodes=$numberNodes -messageHandlerThreads=$messagehdt   -ownIp=$ibip -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBCompute -prob_SSD=$probSSD  -all_workloads=true -zip_workload=$workload -zipfian_param=$zipfian_alpha -space_locality=$space_locality -shared_ratio=$shared_ratio -allocated_mem_size=$remote_mem_size"
 
         echo "start worker: ssh ${ssh_opts} ${compute} '$script_compute | tee -a $log_file.$ip' &"
         ssh ${ssh_opts} ${compute} "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk ; echo '$core_dump_dir/core$compute' | sudo tee /proc/sys/kernel/core_pattern"
@@ -506,7 +506,7 @@ run_node_test() {
 echo "**************************run node test****************************"
 result_file=$bin/results/node
 node_range="8"
-thread_range="16"
+thread_range="1"
 remote_range="100"
 shared_range="100"
 size_grow=0 # 0 not grow, 1 grow with node number
