@@ -652,7 +652,7 @@ int main(int argc, char* argv[]) {
     Memcached memcached;
 //    compute_num = ddsm.rdma_mg->GetComputeNodeNum();
 //    memory_num = ddsm.rdma_mg->GetMemoryNodeNum();
-    NUMOFBLOCKS = FLAGS_allocated_mem_size/(storage::PAGE_SIZE);
+    NUMOFBLOCKS = FLAGS_allocated_mem_size* 1024ull* 1024ull* 1024ull/(storage::PAGE_SIZE);
     printf("number of blocks is %lu\n", NUMOFBLOCKS);
     SYNC_KEY = NUMOFBLOCKS;
 #ifdef FULLY_SHARED_WITHIN_NODE
