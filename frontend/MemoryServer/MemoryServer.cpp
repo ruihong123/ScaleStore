@@ -133,6 +133,6 @@ int main(int argc, char* argv[])
 //    }
 
 //No need to spin because the program will spin in the distructor of the scale store. RemoteGuard will wait for all compute nodes to disconnect.
-
+    sleep(10);
    return 0;
 }
