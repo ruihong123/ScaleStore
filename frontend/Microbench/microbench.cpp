@@ -689,9 +689,8 @@ int main(int argc, char* argv[]) {
         workloads.push_back(FLAGS_read_ratio);
     }
     PID *data = (PID*) malloc(sizeof(PID) * STEPS);
-
-    for (uint64_t t_i = 0; t_i < FLAGS_worker; ++t_i) {
-        for (auto read_ratio: workloads){
+    for (auto read_ratio: workloads){
+        for (uint64_t t_i = 0; t_i < FLAGS_worker; ++t_i) {
             ddsm.getWorkerPool().scheduleJobAsync(t_i, [&, t_i](){
                 // barrier inside
                 Benchmark(t_i, &ddsm, data, &memcached, read_ratio);
