@@ -587,7 +587,9 @@ void Benchmark(int id, ScaleStore *alloc, PID *data, Memcached *memcached, uint3
 
 
     std::unordered_map<uint64_t , int> addr_to_pos;
-
+    auto& catalog = alloc->getCatalog();
+    storage::DistributedBarrier barrier(catalog.getCatalogEntry(BARRIER_ID).pid);
+    barrier.wait();
     // gernerate 2*Iteration access target, half for warm up half for the real test
     static PID* access = nullptr;
     static bool* shared = nullptr;
@@ -598,10 +600,7 @@ void Benchmark(int id, ScaleStore *alloc, PID *data, Memcached *memcached, uint3
         Init(memcached, data, access, shared, id, &seedp);
     }
 
-
-    auto& catalog = alloc->getCatalog();
     printf("start warmup the benchmark on thread %d", id);
-    storage::DistributedBarrier barrier(catalog.getCatalogEntry(BARRIER_ID).pid);
     barrier.wait();
     bool warmup = true;
     Run(access, id, &seedp, warmup, read_ratio);
