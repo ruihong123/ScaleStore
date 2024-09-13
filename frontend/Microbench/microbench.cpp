@@ -280,7 +280,7 @@ PID AlignToPage(PID addr) {
 }
 
 volatile bool data_array_is_ready = false;
-static constexpr uint64_t BARRIER_ID = 1;
+static constexpr uint64_t BARRIER_ID = 0;
 void Init(Memcached* memcached, PID data[], PID access[], bool shared[], int id,
           unsigned int* seedp) {
     printf( "start init\n");
@@ -305,6 +305,7 @@ void Init(Memcached* memcached, PID data[], PID access[], bool shared[], int id,
             if (i%MEMSET_GRANULARITY == MEMSET_GRANULARITY - 1) {
                 memset_buffer[i%MEMSET_GRANULARITY] = data[i];
                 printf("Memset a key %lu\n", i);
+                fflush(stdout);
                 memcached->memSet((const char*)&i, sizeof(i), (const char*)memset_buffer, sizeof(PID) * MEMSET_GRANULARITY);
 //                    assert(i%MEMSET_GRANULARITY == MEMSET_GRANULARITY-1);
             }else{
@@ -314,6 +315,7 @@ void Init(Memcached* memcached, PID data[], PID access[], bool shared[], int id,
             }
             if (i == STEPS - 1) {
                 printf("Memset a key %lu\n", i);
+                fflush(stdout);
                 memcached->memSet((const char*)&i, sizeof(i), (const char*)memset_buffer, sizeof(PID) * MEMSET_GRANULARITY);
             }
         }
