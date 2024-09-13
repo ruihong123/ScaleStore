@@ -24,11 +24,11 @@ namespace scalestore
 // this has been changed according to the setup of disaggregated memory
 struct RemoteGuard{
    std::atomic<uint64_t>& numberRemoteConnected;
-    uint64_t total_connection;
-   RemoteGuard(std::atomic<uint64_t>& numberRemoteConnected) : numberRemoteConnected(numberRemoteConnected), total_connection(numberRemoteConnected){};
+//    uint64_t total_connection;
+   RemoteGuard(std::atomic<uint64_t>& numberRemoteConnected) : numberRemoteConnected(numberRemoteConnected){};
    ~RemoteGuard(){
-       while(numberRemoteConnected >= total_connection/2){
-//           usleep(1);
+       while(numberRemoteConnected){
+           usleep(1);
        }
    }
 };
