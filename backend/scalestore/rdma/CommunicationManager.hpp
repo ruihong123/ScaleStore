@@ -24,7 +24,7 @@
 #include <unistd.h>
 #include <unordered_map>
 
-static int debug = 0;
+static int debug = 1;
 #define DEBUG_LOG(msg)                                                         \
   if (debug)                                                                   \
   std::cout << msg << std::endl
