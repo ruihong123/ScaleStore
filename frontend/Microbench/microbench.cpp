@@ -328,7 +328,7 @@ void Init(Memcached* memcached, PID data[], PID access[], bool shared[], int id,
                         delete memget_buffer;
                     }
                     size_t v_size;
-                    int key =  STEPS - 1;
+                    uint64_t key =  STEPS - 1;
                     memget_buffer = (PID*)memcached->memGet((const char*)&key, sizeof(key),  &v_size);
                     assert(v_size == sizeof(PID) * MEMSET_GRANULARITY);
                 }else if ((FLAGS_shared_ratio > 0 && i % MEMSET_GRANULARITY == 0 )) {
@@ -336,7 +336,7 @@ void Init(Memcached* memcached, PID data[], PID access[], bool shared[], int id,
                         delete memget_buffer;
                     }
                     size_t v_size;
-                    int key =  i + MEMSET_GRANULARITY - 1;
+                    uint64_t key =  i + MEMSET_GRANULARITY - 1;
                     memget_buffer = (PID*)memcached->memGet((const char*)&key, sizeof(key),  &v_size);
                     assert(v_size == sizeof(PID) * MEMSET_GRANULARITY);
                 }
