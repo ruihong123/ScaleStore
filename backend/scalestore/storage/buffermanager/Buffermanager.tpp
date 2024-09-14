@@ -12,6 +12,7 @@ restart:
    // handle fast and slow path in one loop
    BufferFrame* b_ptr = &b;
    BufferFrame** current_slot = &b_ptr;
+   int tranverse_counter = 0;
    // -------------------------------------------------------------------------------------
    while (*current_slot) {
       BufferFrame* tmp = *current_slot;                                  // copy pointer value next field in BF can change;
@@ -37,6 +38,7 @@ restart:
          }
          return g;
       }
+       tranverse_counter++;
       current_slot = &(tmp->next);                                       // take address of next field
       RESTART(!ht_latch.optimisticUnlatch(b_version.value()), restart);  // validate against a nullptr change
    }
