@@ -275,6 +275,7 @@ double Revise(double orig, int remaining, bool positive) {
 PID GADD(PID addr, uint64_t offset) {
     return PID(addr.getOwner(), addr.plainPID() + offset);
 }
+//TODO: we do not need aligh to page we need some new data structure contain both PID and offset in the PID.
 PID AlignToPage(PID addr) {
     return PID(addr.getOwner(), addr.plainPID() & ~(storage::PAGE_SIZE - 1));
 }
@@ -402,11 +403,11 @@ void Init(Memcached* memcached, PID data[], PID access[], bool shared[], int id,
         PID next;
         if (TrueOrFalse(FLAGS_space_locality, seedp)) {
             next = access[i - 1];
-            next = GADD(next, GetRandom(0, items_per_block, seedp) * item_size);
-            next = GADD(next,item_size);
-            if (AlignToPage(next) != AlignToPage(access[i - 1])) {
-                next = AlignToPage(access[i - 1]);
-            }
+//            next = GADD(next, GetRandom(0, items_per_block, seedp) * item_size);
+//            next = GADD(next,item_size);
+//            if (AlignToPage(next) != AlignToPage(access[i - 1])) {
+//                next = AlignToPage(access[i - 1]);
+//            }
         } else {
             if (FLAGS_zip_workload == 0){
                 PID n = data[GetRandom(0, STEPS, seedp)];
@@ -482,65 +483,47 @@ void Run(PID access[], int id, unsigned int *seedp, bool warmup, uint32_t read_r
         switch (op_type) {
             case 0:  //blind write no need to read before write.
                 if (TrueOrFalse(read_ratio, seedp)) {
-                    PID target_cache_line = AlignToPage(to_access);
-                    SharedBFGuard guard(target_cache_line);
-                    memcpy(buf, (char*)guard.getFrame().page->begin() + (to_access.plainPID() - target_cache_line.plainPID()), item_size);
-
-//                    memcpy(buf, (char*)page_buffer + (to_access.offset - target_cache_line.offset), item_size);
-//                    alloc->SELCC_Shared_UnLock(target_cache_line, handle);
-
+                    SharedBFGuard guard(to_access);
+                    memcpy(buf, (char*)guard.getFrame().page->begin() + GetRandom(0, items_per_block - 1, seedp) * item_size, item_size);
                 } else {
-//                    void* page_buffer;
-
                     memset(buf, i, item_size);
-                    PID target_cache_line = AlignToPage(to_access);
-                    ExclusiveBFGuard guard(target_cache_line);
-                    uint64_t cache_line_offset = to_access.plainPID() - target_cache_line.plainPID();
-                    memcpy((char*)guard.getFrame().page->begin()  + (cache_line_offset), buf, item_size);
+                    ExclusiveBFGuard guard(to_access);
+                    memcpy((char*)guard.getFrame().page->begin()  + GetRandom(0, items_per_block - 1, seedp) * item_size, buf, item_size);
                 }
                 break;
             case 1:  //rlock/wlock
             {
                 if (TrueOrFalse(read_ratio, seedp)) {
-                    PID target_cache_line = AlignToPage(to_access);
-                    SharedBFGuard guard(target_cache_line);
-                    memcpy(buf, (char*)guard.getFrame().page->begin() + (to_access.plainPID() - target_cache_line.plainPID()), item_size);
+                    SharedBFGuard guard(to_access);
+                    memcpy(buf, (char*)guard.getFrame().page->begin() + GetRandom(0, items_per_block - 1, seedp) * item_size, item_size);
                 } else {
                     memset(buf, i, item_size);
-                    PID target_cache_line = AlignToPage(to_access);
-                    ExclusiveBFGuard guard(target_cache_line);
-                    uint64_t cache_line_offset = to_access.plainPID() - target_cache_line.plainPID();
-                    memcpy((char*)guard.getFrame().page->begin()  + (cache_line_offset), buf, item_size);
+                    ExclusiveBFGuard guard(to_access);
+                    memcpy((char*)guard.getFrame().page->begin()  + GetRandom(0, items_per_block - 1, seedp) * item_size, buf, item_size);
                 }
                 break;
             }
             case 2:  //rlock+read/wlock+write Is this GAM PSO
             {
                 if (TrueOrFalse(read_ratio, seedp)) {
-                    PID target_cache_line = AlignToPage(to_access);
-                    SharedBFGuard guard(target_cache_line);
-                    memcpy(buf, (char*)guard.getFrame().page->begin() + (to_access.plainPID() - target_cache_line.plainPID()), item_size);
+                    SharedBFGuard guard(to_access);
+                    memcpy(buf, (char*)guard.getFrame().page->begin() + GetRandom(0, items_per_block - 1, seedp) * item_size, item_size);
                 } else {
                     memset(buf, i, item_size);
-                    PID target_cache_line = AlignToPage(to_access);
-                    ExclusiveBFGuard guard(target_cache_line);
-                    uint64_t cache_line_offset = to_access.plainPID() - target_cache_line.plainPID();
-                    memcpy((char*)guard.getFrame().page->begin()  + (cache_line_offset), buf, item_size);
+                    ExclusiveBFGuard guard(to_access);
+                    memcpy((char*)guard.getFrame().page->begin()  + GetRandom(0, items_per_block - 1, seedp) * item_size, buf, item_size);
                 }
                 break;
             }
             case 3:  //try_rlock/try_wlock
             {
                 if (TrueOrFalse(read_ratio, seedp)) {
-                    PID target_cache_line = AlignToPage(to_access);
-                    SharedBFGuard guard(target_cache_line);
-                    memcpy(buf, (char*)guard.getFrame().page->begin() + (to_access.plainPID() - target_cache_line.plainPID()), item_size);
+                    SharedBFGuard guard(to_access);
+                    memcpy(buf, (char*)guard.getFrame().page->begin() + GetRandom(0, items_per_block - 1, seedp) * item_size, item_size);
                 } else {
                     memset(buf, i, item_size);
-                    PID target_cache_line = AlignToPage(to_access);
-                    ExclusiveBFGuard guard(target_cache_line);
-                    uint64_t cache_line_offset = to_access.plainPID() - target_cache_line.plainPID();
-                    memcpy((char*)guard.getFrame().page->begin()  + (cache_line_offset), buf, item_size);
+                    ExclusiveBFGuard guard(to_access);
+                    memcpy((char*)guard.getFrame().page->begin()  + GetRandom(0, items_per_block - 1, seedp) * item_size, buf, item_size);
                 }
                 break;
             }
