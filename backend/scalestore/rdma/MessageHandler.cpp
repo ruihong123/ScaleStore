@@ -189,9 +189,11 @@ void MessageHandler::startThread() {
                      break;
                   }
                   case MESSAGE_TYPE::PRX: {
+                      static uint64_t counter = 0;
                      auto& request = *reinterpret_cast<PossessionRequest*>(ctx.request);
                      handlePossessionRequest<POSSESSION::EXCLUSIVE>(mbPartition, request, ctx, clientId, mailboxIdx, counters,
                                                                     async_read_buffer, threads::ThreadContext::my().page_handle);
+                      counter++;
                      break;
                   }
                   case MESSAGE_TYPE::PRS: {
@@ -380,7 +382,7 @@ void MessageHandler::startThread() {
                                                                 frame.dirty = true;
                                                                 frame.epoch = bm.globalEpoch.load();
                                                           });  
-                     
+                     activePIDs.push_back(pid);
                      frame.latch.unlatchExclusive();
                      // -------------------------------------------------------------------------------------
                      auto& response = *MessageFabric::createMessage<rdma::RemoteAllocationResponse>(ctx.response, pid);

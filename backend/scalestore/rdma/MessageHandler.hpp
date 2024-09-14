@@ -86,6 +86,8 @@ struct MessageHandler {
    std::atomic<size_t> threadCount = 0;
    rdma::CM<InitMessage>& cm;
    storage::Buffermanager& bm;
+   //TODO: delete the following container
+   std::set<PID> activePIDs;
    // -------------------------------------------------------------------------------------
    NodeID nodeId;
    std::vector<ConnectionContext> cctxs;
