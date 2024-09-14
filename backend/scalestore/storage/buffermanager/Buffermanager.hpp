@@ -183,9 +183,7 @@ class Buffermanager
    template <typename PageFunc>
    void removeFrame(BufferFrame& frame, PageFunc handle_page_func) {
 
-       if (nodeId >= FLAGS_nodes/2){
-           assert(false);
-       }
+
       ensure(frame.latch.isLatched()); 
       // fast path check if by chance the frame we want to delete is the bucket then we save the hash function
       if (frame.isHtBucket) {

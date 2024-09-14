@@ -206,7 +206,9 @@ void MessageHandler::startThread() {
                      // we are not owner therefore we transfer the page or notify if possession removed
                      auto guard = bm.findFrame<CONTENTION_METHOD::NON_BLOCKING>(PID(request.pid), Invalidation(), ctx.bmId);
 
-
+                      if (nodeId >= FLAGS_nodes/2){
+                          assert(false);
+                      }
                      // -------------------------------------------------------------------------------------
                      if (guard.state == STATE::RETRY) {
                         ensure(guard.latchState != LATCH_STATE::EXCLUSIVE);
