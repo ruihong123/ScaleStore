@@ -40,9 +40,7 @@ restart:
       current_slot = &(tmp->next);                                       // take address of next field
       RESTART(!ht_latch.optimisticUnlatch(b_version.value()), restart);  // validate against a nullptr change
    }
-    if (nodeId >= FLAGS_nodes/2){
-        assert(false);
-    }
+
    // -------------------------------------------------------------------------------------
    // Insert
    // -------------------------------------------------------------------------------------
@@ -67,6 +65,9 @@ restart:
    ensure(g.frame->pid == EMPTY_PID);
    g.frame->state =
        (pid.getOwner() == nodeId) ? BF_STATE::IO_SSD : BF_STATE::IO_RDMA;  // important to modify state before releasing the hashtable latch
+    if (nodeId >= FLAGS_nodes/2 && g.frame->state == BF_STATE::IO_SSD){
+        assert(false);
+    }
    g.frame->page = page;
    g.frame->pid = pid;
    g.frame->epoch = globalEpoch.load();
