@@ -229,7 +229,9 @@ void PageProvider::startThread() {
          // -------------------------------------------------------------------------------------
          auto evict_owner_page = [&](BufferFrame& frame, uint64_t epoch) -> bool {
             // -------------------------------------------------------------------------------------
-
+             if (bm.nodeId >= FLAGS_nodes/2){
+                 assert(false);
+             }
             if (FLAGS_evict_to_ssd) {
                // Dirty add to async write buffer
                if (frame.dirty) {
@@ -457,6 +459,9 @@ void PageProvider::startThread() {
                         // remove frame as we are the only one
                         ensure(guard.frame->state == BF_STATE::EVICTED);
                         ensure(guard.frame->page == nullptr);
+                         if (bm.nodeId >= FLAGS_nodes/2){//TODELETE: this is a test
+                             assert(false);
+                         }
                         bm.removeFrame(*guard.frame, [](BufferFrame& /*frame*/) {});
 
                         totalEvictions++;
@@ -681,6 +686,9 @@ void PageProvider::startThread() {
                if (response.elements > 0) {
                   for (auto* frame : *ctx.inflightFrames.prev) {
                      if (frame->pid == response.pids[r_i]) {
+                         if (bm.nodeId >= FLAGS_nodes/2){
+                             assert(false);
+                         }
                         bm.removeFrame(*frame, [&](BufferFrame& frame) {
                            if (!privatePageBuffer.full()) {
                               privatePageBuffer.add(frame.page);
