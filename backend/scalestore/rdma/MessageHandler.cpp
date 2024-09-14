@@ -201,12 +201,12 @@ void MessageHandler::startThread() {
                      break;
                   }
                   case MESSAGE_TYPE::PMR: {
-                      if (nodeId >= FLAGS_nodes/2){
-                          assert(false);
-                      }
+
                      auto& request = *reinterpret_cast<PossessionMoveRequest*>(ctx.request);
                      // we are not owner therefore we transfer the page or notify if possession removed
                      auto guard = bm.findFrame<CONTENTION_METHOD::NON_BLOCKING>(PID(request.pid), Invalidation(), ctx.bmId);
+
+
                      // -------------------------------------------------------------------------------------
                      if (guard.state == STATE::RETRY) {
                         ensure(guard.latchState != LATCH_STATE::EXCLUSIVE);

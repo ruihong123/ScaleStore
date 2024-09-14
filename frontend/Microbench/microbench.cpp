@@ -465,7 +465,7 @@ void Run(PID access[], int id, unsigned int *seedp, bool warmup, uint32_t read_r
     PID to_access = access[0];  //access starting point
     char buf[item_size];
 //    int ret;
-//    int j = 0;
+    int j = 0;
 //	int writes = 0;
 //	GAddr fence_addr = alloc->Malloc(1);
 //	epicAssert(fence_addr);
@@ -548,19 +548,15 @@ void Run(PID access[], int id, unsigned int *seedp, bool warmup, uint32_t read_r
                 printf( "unknown op type\n");
                 break;
         }
-        //time locality
-//        if (TrueOrFalse(time_locality, seedp)) {
-//            //we keep to access the same addr
-//            //epicLog(LOG_DEBUG, "keep to access the current location");
-//        } else {
-//            j++;
-//            if (j == ITERATION) {
-//                j = 0;
-//                assert(i == ITERATION - 1);
-//            }
-//            to_access = access[j];
-//            //epicAssert(buf == to_access || addr_to_pos.count(buf) == 0);
-//        }
+
+        j++;
+        if (j == ITERATION) {
+            j = 0;
+            assert(i == ITERATION - 1);
+        }
+        to_access = access[j];
+        //epicAssert(buf == to_access || addr_to_pos.count(buf) == 0);
+
         if (i%10000 == 0 && id == 0){
             printf("Node %d finish %d ops \n", node_id, i);
             fflush(stdout);
