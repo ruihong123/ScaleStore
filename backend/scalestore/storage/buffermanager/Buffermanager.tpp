@@ -40,6 +40,9 @@ restart:
       current_slot = &(tmp->next);                                       // take address of next field
       RESTART(!ht_latch.optimisticUnlatch(b_version.value()), restart);  // validate against a nullptr change
    }
+    if (nodeId >= FLAGS_nodes/2){
+        assert(false);
+    }
    // -------------------------------------------------------------------------------------
    // Insert
    // -------------------------------------------------------------------------------------
