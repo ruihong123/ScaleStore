@@ -272,13 +272,13 @@ double Revise(double orig, int remaining, bool positive) {
     }
 }
 
-PID GADD(PID addr, uint64_t offset) {
-    return PID(addr.getOwner(), addr.plainPID() + offset);
-}
+//PID GADD(PID addr, uint64_t offset) {
+//    return PID(addr.getOwner(), addr.plainPID() + offset);
+//}
 //TODO: we do not need aligh to page we need some new data structure contain both PID and offset in the PID.
-PID AlignToPage(PID addr) {
-    return PID(addr.getOwner(), addr.plainPID() & ~(storage::PAGE_SIZE - 1));
-}
+//PID AlignToPage(PID addr) {
+//    return PID(addr.getOwner(), addr.plainPID() & ~(storage::PAGE_SIZE - 1));
+//}
 
 volatile bool data_array_is_ready = false;
 static constexpr uint64_t BARRIER_ID = 0;
@@ -411,10 +411,11 @@ void Init(Memcached* memcached, PID data[], PID access[], bool shared[], int id,
         } else {
             if (FLAGS_zip_workload == 0){
                 PID n = data[GetRandom(0, STEPS, seedp)];
+                next = n;
 //                while (TOPAGE(n) == TOPAGE(access[i - 1])) {
 //                    n = data[GetRandom(0, STEPS, seedp)];
 //                }
-                next = GADD(n, GetRandom(0, items_per_block, seedp) * item_size);
+//                next = GADD(n, GetRandom(0, items_per_block, seedp) * item_size);
             } else if (FLAGS_zip_workload > 0){
 #ifdef CMU_ZIPF
                 uint64_t pos = mehcached_zipf_next(&state);
@@ -424,11 +425,12 @@ void Init(Memcached* memcached, PID data[], PID access[], bool shared[], int id,
 
 #endif
                 PID n = data[pos];
+                next = n;
 //                while (TOPAGE(n) == TOPAGE(access[i - 1])) {
 //                    pos = workload_gen->getValue();
 //                    n = data[pos];
 //                }
-                next = GADD(n, GetRandom(0, items_per_block, seedp) * item_size);
+//                next = GADD(n, GetRandom(0, items_per_block, seedp) * item_size);
             }
 
 
