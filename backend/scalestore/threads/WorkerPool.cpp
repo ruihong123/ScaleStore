@@ -44,7 +44,7 @@ WorkerPool::WorkerPool(rdma::CM<rdma::InitMessage>& cm, NodeID nodeId): workers(
 
 
    
-   if(FLAGS_pinThreads && nodeId <= FLAGS_nodes/2){
+   if(FLAGS_pinThreads && nodeId < FLAGS_nodes/2){
        // commented out because we need to numa limit the cores that this program use
       for (auto& t : workerThreads) {
          threads::CoreManager::getInstance().pinThreadRoundRobin(t.native_handle());

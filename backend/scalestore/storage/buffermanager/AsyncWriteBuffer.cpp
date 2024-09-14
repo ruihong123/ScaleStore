@@ -38,6 +38,8 @@ bool AsyncWriteBuffer::full()
 // -------------------------------------------------------------------------------------
 void AsyncWriteBuffer::add(BufferFrame& bf, PID pid, uint64_t epoch_added)
 {
+    // not possible for disaggregated memory
+    assert(false);
    ensure(!full());
    ensure(u64(bf.page) % 512 == 0);
    ensure((outstanding_ios + ready_to_submit) <= (int64_t)batch_max_size);

@@ -131,6 +131,7 @@ struct MessageHandler {
       }
 
       if(guard.state == STATE::SSD){
+          assert(false);
          // -------------------------------------------------------------------------------------
          ensure(guard.frame->latch.isLatched());
          ensure(guard.frame->page != nullptr);
