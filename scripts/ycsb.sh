@@ -51,7 +51,7 @@ compute_ARGS="$@"
 
 echo "input Arguments: ${compute_ARGS}"
 echo "launch..."
-workernum=16
+workernum=8
 dramGBCompute=8
 dramGBMemory=32
 ssdGBCompute=9
