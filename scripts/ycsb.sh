@@ -65,12 +65,12 @@ messagehdt=4 # default 4
 RUNS=1
 Runtime=40
 ssdPath="/mnt/core_dump/data.blk"
-#numacommand="numactl --physcpubind=31" #bind to 1 core
+numacommand="numactl --physcpubind=31" #bind to 1 core
 #numacommand="numactl --physcpubind=30,31" #bind to 2 core
 #numacommand="numactl --physcpubind=28,29,30,31" # bind to 4 cores
 
 #numacommand="numactl --physcpubind=26,27,28,29,30,31" # bind to 4 cores
-numacommand="" # no limit on the core.
+#numacommand="" # no limit on the core.
 numTuples=2000000000
 echo "number of nodes: ${numberNodes}"
 
