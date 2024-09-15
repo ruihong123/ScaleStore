@@ -734,7 +734,7 @@ int main(int argc, char* argv[]) {
                     "compute_num: %lu, workload: %d, zipfian_alpha: %f no_thread: %lu, shared_ratio: %d, read_ratio: %d, space_locality: %d, "
                     "op_type = %d, memory_type = %d, item_size = %d, "
                     "operation with cache invalidation message accounts for %f percents, average cache valid hit percents %f total_throughput: %ld, avg_throuhgput:%ld, avg_latency:%ld, \n\n",
-                    (FLAGS_nodes/2), FLAGS_zip_workload, FLAGS_zipfian_param, FLAGS_worker, FLAGS_shared_ratio, FLAGS_read_ratio,
+                    (FLAGS_nodes/2), FLAGS_zip_workload, FLAGS_zipfian_param, FLAGS_worker, FLAGS_shared_ratio, read_ratio,
                     FLAGS_space_locality, op_type, memory_type, item_size, static_cast<double>(invalidation_num) / ITERATION_TOTAL, static_cast<double>(hit_valid_num) / ITERATION_TOTAL, t_thr,
                     a_thr, a_lat);
 #ifdef GETANALYSIS
