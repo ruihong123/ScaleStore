@@ -73,7 +73,7 @@ long ITERATION_TOTAL = 16384000;
 long ITERATION = 0;
 DEFINE_uint32(read_ratio, 100, "");
 DEFINE_bool(all_workloads, false , "Execute all workloads i.e. 50 95 100 ReadRatio on same tree");
-DEFINE_int32(zip_workload, 0, "/0: random; 1: zipfian 2: multi-hotspot");
+DEFINE_int32(zip_workload, 0, "0: random; 1: zipfian 2: multi-hotspot");
 DEFINE_uint64(allocated_mem_size, 48, "Remote memory usage in GB");
 DEFINE_int32(space_locality, 0, "space locality 0~100");
 DEFINE_int32(shared_ratio, 100, "shared_ratio 0~100");
@@ -746,8 +746,11 @@ int main(int argc, char* argv[]) {
         }
 
 #endif
+
             result.close();
         }
+        total_throughput = 0;
+        avg_latency = 0;
     }
 
 
