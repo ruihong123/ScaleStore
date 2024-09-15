@@ -11,16 +11,16 @@ conf_file=$bin/../connection.conf
 #memory_nodes=$bin/memory_nodes
 log_file=$bin/log
 cache_mem_size=8 # 8 gb Local memory size
-remote_mem_size_base=1 # 48 gb Remote memory size
+remote_mem_size_base=48 # 48 gb Remote memory size
 #master_ip=db3.cs.purdue.edu # make sure this is in accordance with the server whose is_master=1
 master_port=12311
 port=$((10000+RANDOM%1000))
 
 #workernum=8
 dramGBCompute=8
-dramGBMemory=10 #32
+dramGBMemory=32 #32
 ssdGBCompute=9
-ssdGBMemory=14 #36
+ssdGBMemory=36 #36
 numberNodes=$(($compute_num+$memory_num))
 #zipf=0 #[0~1]
 probSSD=100
@@ -31,7 +31,7 @@ RUNS=1
 Runtime=40
 ssdPath="/mnt/core_dump/data.blk"
 core_dump_dir="/mnt/core_dump"
-#numacommand="numactl --physcpubind=31" #bind to 1 core
+numacommand="numactl --physcpubind=31" #bind to 1 core
 #numacommand="numactl --physcpubind=30,31" #bind to 2 core
 #numacommand="numactl --physcpubind=28,29,30,31" # bind to 4 cores
 
