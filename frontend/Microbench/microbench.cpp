@@ -705,7 +705,7 @@ int main(int argc, char* argv[]) {
         t_thr = a_thr = a_lat = invalidation_num = hit_valid_num = 0;
         for (uint64_t i = 0; i < FLAGS_nodes/2; i++) {
             memset(res, 0, sizeof(long) * 5);
-            temp = SYNC_KEY + Memcache_offset + i * 2;
+            temp = SYNC_KEY + Memcache_offset + i;
             size_t len;
             printf("memGet temp key %d\n", temp);
             long* ret = (long*)memcached.memGet((char*)&temp , sizeof(int), &len);
