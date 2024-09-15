@@ -68,16 +68,28 @@ struct CoreManager{
       return true;
    }
    
-   CoreManager(){
-      uint64_t count = std::thread::hardware_concurrency();
-      uint64_t socketCount = count / FLAGS_sockets;
-      uint64_t pCores = socketCount / 2;
-      uint64_t firstCPUId = pCores * FLAGS_socket;
-      uint64_t firstHTId = pCores * (FLAGS_sockets + FLAGS_socket);
-      cores.resize(pCores);
-      hts.resize(pCores); 
-      std::iota(std::begin(cores), std::end(cores), firstCPUId);
-      std::iota(std::begin(hts), std::end(hts), firstHTId);
+//   CoreManager(){
+//      uint64_t count = std::thread::hardware_concurrency();
+//      uint64_t socketCount = count / FLAGS_sockets;
+//      uint64_t pCores = socketCount / 2;
+//      uint64_t firstCPUId = pCores * FLAGS_socket;
+//      uint64_t firstHTId = pCores * (FLAGS_sockets + FLAGS_socket);
+//      cores.resize(pCores);
+//      hts.resize(pCores);
+//      std::iota(std::begin(cores), std::end(cores), firstCPUId);
+//      std::iota(std::begin(hts), std::end(hts), firstHTId);
+//    }
+
+    CoreManager(){
+        uint64_t count = std::thread::hardware_concurrency();
+//        uint64_t socketCount = count / FLAGS_sockets;
+        uint64_t pCores = count / 2;
+        uint64_t firstCPUId = 0;
+        uint64_t firstHTId = pCores;
+        cores.resize(pCores);
+        hts.resize(pCores);
+        std::iota(std::begin(cores), std::end(cores), firstCPUId);
+        std::iota(std::begin(hts), std::end(hts), firstHTId);
     }
    
 };
