@@ -24,9 +24,9 @@ ssdGBMemory=36 #36
 numberNodes=$(($compute_num+$memory_num))
 #zipf=0 #[0~1]
 probSSD=100
-pp=1 # default 2
+pp=2 # default 2
 fp=1
-messagehdt=1 # default 4
+messagehdt=4 # default 4
 RUNS=1
 Runtime=40
 ssdPath="/mnt/core_dump/data.blk"
@@ -506,7 +506,7 @@ run_node_test() {
 echo "**************************run node test****************************"
 result_file=$bin/results/node
 node_range="8"
-thread_range="16"
+thread_range="1 8 16"
 remote_range="100"
 shared_range="100"
 size_grow=0 # 0 not grow, 1 grow with node number
