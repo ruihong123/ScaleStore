@@ -561,7 +561,7 @@ void Run(PID access[], int id, unsigned int *seedp, bool warmup, uint32_t read_r
     }
 }
 
-void Benchmark(int id, ScaleStore *alloc, PID *access, Memcached *memcached, uint32_t read_ratio) {
+void Benchmark(int id, ScaleStore *alloc, PID *access, uint32_t read_ratio) {
 
     unsigned int seedp = FLAGS_worker * alloc->getNodeID() + id;
     printf("seedp = %d\n", seedp);
@@ -696,7 +696,7 @@ int main(int argc, char* argv[]) {
         for (uint64_t t_i = 0; t_i < FLAGS_worker; ++t_i) {
             ddsm.getWorkerPool().scheduleJobAsync(t_i, [&, t_i](){
                 // barrier inside
-                Benchmark(t_i, &ddsm, access_matrix[t_i], &memcached, read_ratio);
+                Benchmark(t_i, &ddsm, access_matrix[t_i], read_ratio);
             });
         }
         ddsm.getWorkerPool().joinAll();
