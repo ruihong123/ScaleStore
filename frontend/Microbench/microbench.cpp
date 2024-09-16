@@ -792,6 +792,7 @@ int main(int argc, char* argv[]) {
 //	if(time < 2) time += 1;
     long time = 1;
     printf( "sleep for %ld s\n\n", time);
+    fflush(stdout);
     sleep(time);
 
     return 0;
