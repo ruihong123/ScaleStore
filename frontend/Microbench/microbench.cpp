@@ -67,8 +67,8 @@ const char* result_file = "result.csv";
 //exp parameters
 // Cache can hold 4Million cache entries. Considering the random filling mechanism,
 // if we want to gurantee that the cache has been filled, we need to run 8Million iterations (2 times). space locality use 16384000
-//long ITERATION_TOTAL = 8192000;
-long ITERATION_TOTAL = 16384000;
+long ITERATION_TOTAL = 8192000;
+//long ITERATION_TOTAL = 16384000;
 
 long ITERATION = 0;
 DEFINE_uint32(read_ratio, 100, "");
@@ -284,6 +284,7 @@ volatile bool data_array_is_ready = false;
 static constexpr uint64_t BARRIER_ID = 0;
 void Init(Memcached* memcached, PID data[], PID access[], bool shared[], int id,
           unsigned int* seedp) {
+
     printf( "start init\n");
 //    int l_space_locality = FLAGS_space_locality;
     int l_shared_ratio = FLAGS_shared_ratio;
@@ -560,7 +561,7 @@ void Run(PID access[], int id, unsigned int *seedp, bool warmup, uint32_t read_r
     }
 }
 
-void Benchmark(int id, ScaleStore *alloc, PID *data, Memcached *memcached, uint32_t read_ratio) {
+void Benchmark(int id, ScaleStore *alloc, PID *access, Memcached *memcached, uint32_t read_ratio) {
 
     unsigned int seedp = FLAGS_worker * alloc->getNodeID() + id;
     printf("seedp = %d\n", seedp);
@@ -570,19 +571,20 @@ void Benchmark(int id, ScaleStore *alloc, PID *data, Memcached *memcached, uint3
     std::unordered_map<uint64_t , int> addr_to_pos;
     auto& catalog = alloc->getCatalog();
     storage::DistributedBarrier barrier(catalog.getCatalogEntry(BARRIER_ID).pid);
-    barrier.wait();
+//    barrier.wait();
+    // Below is potentially not correct. THe static variable will make very thread accessing the same set improving the cache hit rate.
     // gernerate 2*Iteration access target, half for warm up half for the real test
-    static PID* access = nullptr;
-    static bool* shared = nullptr;
-    if (!access){
-        assert(shared == nullptr);
-        access = (PID*) malloc(sizeof(PID) * 2*ITERATION);
-        shared = (bool*) malloc(sizeof(bool) * STEPS);
-        Init(memcached, data, access, shared, id, &seedp);
-    }
+//    static PID* access = nullptr;
+//    static bool* shared = nullptr;
+//    if (!access){
+//        assert(shared == nullptr);
+//        access = (PID*) malloc(sizeof(PID) * 2*ITERATION);
+//        shared = (bool*) malloc(sizeof(bool) * STEPS);
+//        Init(memcached, data, access, shared, id, &seedp);
+//    }
 
     printf("start warmup the benchmark on thread %d", id);
-    barrier.wait();
+//    barrier.wait();
     bool warmup = true;
     Run(access, id, &seedp, warmup, read_ratio);
     barrier.wait();
@@ -670,13 +672,31 @@ int main(int argc, char* argv[]) {
     }else{
         workloads.push_back(FLAGS_read_ratio);
     }
-    PID *data = (PID*) malloc(sizeof(PID) * STEPS);
+    PID** access_matrix = new PID*[FLAGS_worker];
+    for (uint64_t i = 0; i < FLAGS_worker; ++i)
+        access_matrix[i] = new PID[2*ITERATION];
+
+    bool** shared_matrix = new bool*[FLAGS_worker];
+    for (uint64_t i = 0; i < FLAGS_worker; ++i)
+        shared_matrix[i] = new bool[STEPS];
+    PID* data_matrix = new PID[STEPS];
+    auto& catalog = ddsm.getCatalog();
+    storage::DistributedBarrier barrier(catalog.getCatalogEntry(BARRIER_ID).pid);
+    for (uint64_t t_i = 0; t_i < FLAGS_worker; ++t_i) {
+        ddsm.getWorkerPool().scheduleJobAsync(t_i, [&, t_i](){
+            barrier.wait();
+            unsigned int seedp = FLAGS_worker * ddsm.getNodeID() + t_i;
+            // barrier outside
+            Init(&memcached, data_matrix, access_matrix[t_i], shared_matrix[t_i], t_i, &seedp);
+            barrier.wait();
+        });
+    }
+    ddsm.getWorkerPool().joinAll();
     for (auto read_ratio: workloads){
         for (uint64_t t_i = 0; t_i < FLAGS_worker; ++t_i) {
             ddsm.getWorkerPool().scheduleJobAsync(t_i, [&, t_i](){
                 // barrier inside
-                Benchmark(t_i, &ddsm, data, &memcached, read_ratio);
-
+                Benchmark(t_i, &ddsm, access_matrix[t_i], &memcached, read_ratio);
             });
         }
         ddsm.getWorkerPool().joinAll();
