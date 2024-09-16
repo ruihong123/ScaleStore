@@ -571,7 +571,7 @@ void Benchmark(int id, ScaleStore *alloc, PID *access, uint32_t read_ratio) {
     std::unordered_map<uint64_t , int> addr_to_pos;
     auto& catalog = alloc->getCatalog();
     storage::DistributedBarrier barrier(catalog.getCatalogEntry(BARRIER_ID).pid);
-//    barrier.wait();
+    barrier.wait();
     // Below is potentially not correct. THe static variable will make very thread accessing the same set improving the cache hit rate.
     // gernerate 2*Iteration access target, half for warm up half for the real test
 //    static PID* access = nullptr;
@@ -681,9 +681,13 @@ int main(int argc, char* argv[]) {
         shared_matrix[i] = new bool[STEPS];
     PID* data_matrix = new PID[STEPS];
     auto& catalog = ddsm.getCatalog();
-    storage::DistributedBarrier barrier(catalog.getCatalogEntry(BARRIER_ID).pid);
+    // Note that the scalestore's data structures (barrier, btree, etc) can be only called in thread registered by the way below.
+    //  std::unique_ptr<threads::ThreadContext> threadContext = std::make_unique<threads::ThreadContext>();
+    //  threads::ThreadContext::tlsPtr = threadContext.get();
+    // Otherwise, there will be errors.
     for (uint64_t t_i = 0; t_i < FLAGS_worker; ++t_i) {
         ddsm.getWorkerPool().scheduleJobAsync(t_i, [&, t_i](){
+            storage::DistributedBarrier barrier(catalog.getCatalogEntry(BARRIER_ID).pid);
             barrier.wait();
             unsigned int seedp = FLAGS_worker * ddsm.getNodeID() + t_i;
             // barrier outside
