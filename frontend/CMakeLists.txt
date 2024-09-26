@@ -61,9 +61,9 @@ add_executable(btreeTest tests/BTreeTest.cpp)
 add_dependencies(btreeTest scalestore)
 target_link_libraries(btreeTest scalestore numa)
 
-add_executable(tpcc tpcc/tpcc.cpp)
-add_dependencies(tpcc scalestore)
-target_link_libraries(tpcc scalestore numa)
+#add_executable(tpcc tpcc/tpcc.cpp)
+#add_dependencies(tpcc scalestore)
+#target_link_libraries(tpcc scalestore numa)
 
 add_executable(MemoryServer MemoryServer/MemoryServer.cpp)
 add_dependencies(MemoryServer scalestore)
