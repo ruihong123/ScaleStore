@@ -94,7 +94,7 @@ struct customer_t {
    Numeric c_ytd_payment;
    Numeric c_payment_cnt;
    Numeric c_delivery_cnt;
-   Varchar<500> c_data;
+//   Varchar<500> c_data;
 };
 
 struct customer_wdl_t {
