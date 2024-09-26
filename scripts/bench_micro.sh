@@ -18,7 +18,7 @@ port=$((10000+RANDOM%1000))
 
 #workernum=8
 dramGBCompute=8
-dramGBMemory=32 #32
+dramGBMemory=24 #32
 ssdGBCompute=9
 ssdGBMemory=36 #36
 numberNodes=$(($compute_num+$memory_num))
