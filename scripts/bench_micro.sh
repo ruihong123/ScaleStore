@@ -24,19 +24,19 @@ ssdGBMemory=36 #36
 numberNodes=$(($compute_num+$memory_num))
 #zipf=0 #[0~1]
 probSSD=100
-pp=1 # default 2
+pp=2 # default 2
 fp=1
-messagehdt=1 # default 4
+messagehdt=4 # default 4
 RUNS=1
 Runtime=40
 ssdPath="/mnt/core_dump/data.blk"
-core_dump_dir="/mnt/core_dump"
+#core_dump_dir="/mnt/core_dump"
 #numacommand="numactl --physcpubind=31" #bind to 1 core
-numacommand="numactl --physcpubind=30,31" #bind to 2 core
+#numacommand="numactl --physcpubind=30,31" #bind to 2 core
 #numacommand="numactl --physcpubind=28,29,30,31" # bind to 4 cores
 
 #numacommand="numactl --physcpubind=26,27,28,29,30,31" # bind to 4 cores
-#numacommand="" # no limit on the core.
+numacommand="" # no limit on the core.
 
 run() {
     echo "run for result_file=$result_file,
@@ -506,12 +506,12 @@ run_node_test() {
 echo "**************************run node test****************************"
 result_file=$bin/results/node
 node_range="8"
-thread_range="1 2 4 8 16"
+thread_range="1 8 16"
 remote_range="100"
 shared_range="100"
 size_grow=0 # 0 not grow, 1 grow with node number
 read_range="100"
-space_range="50"
+space_range="0"
 time_range="0"
 workload_range="0" # 0 uniform, 1 single zipfian, n >1 multispot zipfian.
 zipfian_alpha_range="0.99" #make sure workload = 1 if we want to test zipfian.
