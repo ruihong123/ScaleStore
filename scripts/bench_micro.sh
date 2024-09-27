@@ -24,19 +24,19 @@ ssdGBMemory=24 #36
 numberNodes=$(($compute_num+$memory_num))
 #zipf=0 #[0~1]
 probSSD=100
-pp=2 # default 2
+pp=1 # default 2
 fp=1
-messagehdt=4 # default 4
+messagehdt=1 # default 4
 RUNS=1
 Runtime=40
 ssdPath="/mnt/core_dump/data.blk"
 core_dump_dir="/mnt/core_dump"
-#numacommand="numactl --physcpubind=23" #bind to 1 core
+numacommand="numactl --physcpubind=23" #bind to 1 core
 #numacommand="numactl --physcpubind=22,23" #bind to 2 core
 #numacommand="numactl --physcpubind=20,21,22,23" # bind to 4 cores
 
 #numacommand="numactl --physcpubind=18,19,20,21,22,23" # bind to 4 cores
-numacommand="" # no limit on the core.
+#numacommand="" # no limit on the core.
 
 run() {
     echo "run for result_file=$result_file,
