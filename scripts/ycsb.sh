@@ -53,7 +53,7 @@ echo "input Arguments: ${compute_ARGS}"
 echo "launch..."
 workernum=8
 dramGBCompute=8
-dramGBMemory=32
+dramGBMemory=12
 ssdGBCompute=9
 ssdGBMemory=36
 numberNodes=$(($compute_num + $memory_num))
