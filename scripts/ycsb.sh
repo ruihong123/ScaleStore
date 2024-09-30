@@ -71,7 +71,7 @@ ssdPath="/mnt/core_dump/data.blk"
 
 #numacommand="numactl --physcpubind=26,27,28,29,30,31" # bind to 4 cores
 numacommand="" # no limit on the core.
-numTuples=500000000
+numTuples=1000000000
 echo "number of nodes: ${numberNodes}"
 
 launch () {
