@@ -414,7 +414,7 @@ struct BTree {
                makeRoot(sep, g_node.getFrame().pid, newInner, xg_parent);
             } else {
                 if (xg_parent.getFrame().pid ==entry->root) {
-                    printf("Current root level is %d contain %d entries\n", entry->height, xg_parent.as<Inner>(0).count+1);
+                    printf("Current root level is %lu contain %d entries\n", entry->height, xg_parent.as<Inner>(0).count+1);
                 }
                xg_parent.as<Inner>(0).insert(sep, newInner);
             }
