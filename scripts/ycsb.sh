@@ -53,7 +53,7 @@ echo "input Arguments: ${compute_ARGS}"
 echo "launch..."
 workernum=8
 dramGBCompute=8
-dramGBMemory=14
+dramGBMemory=20
 ssdGBCompute=9
 ssdGBMemory=36
 numberNodes=$(($compute_num + $memory_num))
@@ -63,7 +63,7 @@ pp=2 # default 2
 fp=1
 messagehdt=4 # default 4
 RUNS=1
-Runtime=200
+Runtime=100
 ssdPath="/mnt/core_dump/data.blk"
 #numacommand="numactl --physcpubind=31" #bind to 1 core
 #numacommand="numactl --physcpubind=30,31" #bind to 2 core
@@ -71,7 +71,7 @@ ssdPath="/mnt/core_dump/data.blk"
 
 #numacommand="numactl --physcpubind=26,27,28,29,30,31" # bind to 4 cores
 numacommand="" # no limit on the core.
-numTuples=2000000000
+numTuples=4000000000
 echo "number of nodes: ${numberNodes}"
 
 launch () {
