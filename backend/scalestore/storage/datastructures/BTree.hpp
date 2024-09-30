@@ -397,6 +397,7 @@ struct BTree {
             goto restart;  // check inner
          ensure(node->type == PageType::BTreeInner);
          auto& inner = *reinterpret_cast<Inner*>(node);
+
          // -------------------------------------------------------------------------------------
          // split
          // -----------------------------------------------------------------------------------
@@ -412,6 +413,9 @@ struct BTree {
             if (xg_parent.getFrame().pid == entryPage) {
                makeRoot(sep, g_node.getFrame().pid, newInner, xg_parent);
             } else {
+                if (xg_parent.getFrame().pid ==entry->root) {
+                    printf("Current root contain %d entries\n", inner.count+1);
+                }
                xg_parent.as<Inner>(0).insert(sep, newInner);
             }
             goto restart;
