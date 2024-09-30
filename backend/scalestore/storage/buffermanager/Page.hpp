@@ -12,7 +12,7 @@ namespace storage
 // constexpr uint64_t PAGE_SIZE = 1024 * 256 * 1;
 //constexpr uint64_t PAGE_SIZE = 1024 * 4;
 //constexpr uint64_t PAGE_SIZE = 1024 * 2;
-constexpr uint64_t PAGE_SIZE = 512;
+constexpr uint64_t PAGE_SIZE = 1024;
 // -------------------------------------------------------------------------------------
 struct alignas(512) Page {
    volatile std::size_t magicDebuggingNumber = 999; // INIT used for RDMA debugging
