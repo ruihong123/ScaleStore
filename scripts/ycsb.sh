@@ -63,7 +63,7 @@ pp=2 # default 2
 fp=1
 messagehdt=4 # default 4
 RUNS=1
-Runtime=40
+Runtime=100
 ssdPath="/mnt/core_dump/data.blk"
 #numacommand="numactl --physcpubind=31" #bind to 1 core
 #numacommand="numactl --physcpubind=30,31" #bind to 2 core
