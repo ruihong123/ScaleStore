@@ -382,7 +382,7 @@ void MessageHandler::startThread() {
                                                                 frame.dirty = true;
                                                                 frame.epoch = bm.globalEpoch.load();
                                                           });  
-                     activePIDs.insert(pid);
+//                     activePIDs.insert(pid);
                      frame.latch.unlatchExclusive();
                      // -------------------------------------------------------------------------------------
                      auto& response = *MessageFabric::createMessage<rdma::RemoteAllocationResponse>(ctx.response, pid);
