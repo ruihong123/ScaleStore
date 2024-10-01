@@ -31,6 +31,7 @@ RUNS=1
 #Runtime=40
 ssdPath="/mnt/core_dump/data.blk"
 core_dump_dir="/mnt/core_dump"
+all_workloads=false
 #numacommand="numactl --physcpubind=23" #bind to 1 core
 #numacommand="numactl --physcpubind=22,23" #bind to 2 core
 #numacommand="numactl --physcpubind=20,21,22,23" # bind to 4 cores
@@ -506,14 +507,14 @@ run_node_test() {
 echo "**************************run node test****************************"
 result_file=$bin/results/node
 node_range="8"
-thread_range="1 2 4"
+thread_range="1 2 4 8 16"
 remote_range="100"
 shared_range="100"
 size_grow=0 # 0 not grow, 1 grow with node number
-read_range="100"
+read_range="0 50 95 100"
 space_range="0"
 time_range="0"
-workload_range="0" # 0 uniform, 1 single zipfian, n >1 multispot zipfian.
+workload_range="1" # 0 uniform, 1 single zipfian, n >1 multispot zipfian.
 zipfian_alpha_range="0.99" #make sure workload = 1 if we want to test zipfian.
 #
 op_range="1" # use 1
