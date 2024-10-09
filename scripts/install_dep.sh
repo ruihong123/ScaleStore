@@ -69,10 +69,10 @@ function run_bench() {
   do
     echo "Set up the ${compute_shard[$n]}"
     ssh -o StrictHostKeyChecking=no ${compute_shard[$n]}  "sudo add-apt-repository ppa:ubuntu-toolchain-r/test && sudo apt-get update && sudo apt install -y gcc-10 g++-10" & # python3.6
-    ssh -o StrictHostKeyChecking=no ${compute_shard[$n]}  "git clone https://github.com/google/cityhash && cd cityhash/ && ./configure && make all check CXXFLAGS='-g -O3' && sudo make install" & # python3.6
-    ssh -o StrictHostKeyChecking=no ${compute_shard[$n]}  "sudo apt-get update && sudo apt-get install -y libnuma-dev numactl htop libmemcached-dev memcached libboost-all-dev libgflags-dev libaio-dev"&
-    ssh -o StrictHostKeyChecking=no ${compute_shard[$n]}  "sudo mkdir /mnt/core_dump && sudo mkfs.ext4 /dev/sda4 && sudo mount /dev/sda4 /mnt/core_dump" &
-    ssh -o StrictHostKeyChecking=no ${compute_shard[$n]}  "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk" &
+#    ssh -o StrictHostKeyChecking=no ${compute_shard[$n]}  "git clone https://github.com/google/cityhash && cd cityhash/ && ./configure && make all check CXXFLAGS='-g -O3' && sudo make install" & # python3.6
+#    ssh -o StrictHostKeyChecking=no ${compute_shard[$n]}  "sudo apt-get update && sudo apt-get install -y libnuma-dev numactl htop libmemcached-dev memcached libboost-all-dev libgflags-dev libaio-dev"&
+#    ssh -o StrictHostKeyChecking=no ${compute_shard[$n]}  "sudo mkdir /mnt/core_dump && sudo mkfs.ext4 /dev/sda4 && sudo mount /dev/sda4 /mnt/core_dump" &
+#    ssh -o StrictHostKeyChecking=no ${compute_shard[$n]}  "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk" &
 
 #    ssh -o StrictHostKeyChecking=no ${compute_shard[$n]}  "sudo killall apt apt-get"
 #    ssh -o StrictHostKeyChecking=no ${compute_shard[$n]}  "sudo apt-get install -y libaio-dev" &
@@ -82,10 +82,10 @@ function run_bench() {
 #    screen -d -m pwd && cd /users/Ruihong && git clone --recurse-submodules $github_repo && cd MemoryEngine/ && mkdir release &&  cd release && cmake -DCMAKE_BUILD_TYPE=Release .. && sudo apt install numactl -y &&screen -d -m pwd && cd /users/Ruihong && git clone --recurse-submodules $github_repo && cd MemoryEngine/ && mkdir release &&  cd release && cmake -DCMAKE_BUILD_TYPE=Release .. && sudo apt install numactl -y &&
     echo "Set up the ${memory_shard[$n]}"
     ssh -o StrictHostKeyChecking=no ${memory_shard[$n]}  "sudo add-apt-repository ppa:ubuntu-toolchain-r/test && sudo apt-get update && sudo apt install -y gcc-10 g++-10" & # python3.6
-    ssh -o StrictHostKeyChecking=no ${memory_shard[$n]}  "git clone https://github.com/google/cityhash && cd cityhash/ && ./configure && make all check CXXFLAGS='-g -O3' && sudo make install" & # python3.6
-    ssh -o StrictHostKeyChecking=no ${memory_shard[$n]}  "sudo apt-get update && sudo apt-get install -y libnuma-dev numactl htop libmemcached-dev memcached libboost-all-dev libgflags-dev libaio-dev"&
-    ssh -o StrictHostKeyChecking=no ${memory_shard[$n]}  "sudo mkdir /mnt/core_dump && sudo mkfs.ext4 /dev/sda4 && sudo mount /dev/sda4 /mnt/core_dump" &
-    ssh -o StrictHostKeyChecking=no ${memory_shard[$n]}  "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk" &
+#    ssh -o StrictHostKeyChecking=no ${memory_shard[$n]}  "git clone https://github.com/google/cityhash && cd cityhash/ && ./configure && make all check CXXFLAGS='-g -O3' && sudo make install" & # python3.6
+#    ssh -o StrictHostKeyChecking=no ${memory_shard[$n]}  "sudo apt-get update && sudo apt-get install -y libnuma-dev numactl htop libmemcached-dev memcached libboost-all-dev libgflags-dev libaio-dev"&
+#    ssh -o StrictHostKeyChecking=no ${memory_shard[$n]}  "sudo mkdir /mnt/core_dump && sudo mkfs.ext4 /dev/sda4 && sudo mount /dev/sda4 /mnt/core_dump" &
+#    ssh -o StrictHostKeyChecking=no ${memory_shard[$n]}  "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk" &
 #    ssh -o StrictHostKeyChecking=no ${memory_shard[$n]}  "sudo killall apt apt-get"
 #    ssh -o StrictHostKeyChecking=no ${memory_shard[$n]}  "sudo apt-get install -y libaio-dev" &
 
