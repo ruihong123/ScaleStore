@@ -638,7 +638,7 @@ private:
   std::vector<ibv_cq *> outgoingCqs;
   std::vector<rdma_event_channel *> outgoingChannels;
   std::vector<RdmaContext *> incomingIds;
-
+    std::mutex dev_mtx;
   void resolveAddr(rdma_event_channel *outgoingChannel,
                    rdma_cm_id *outgoingCmId, struct sockaddr_storage &sin) {
     if (sin.ss_family == AF_INET)
@@ -672,6 +672,7 @@ private:
 
   // Helper Functions
   void bindHandler(struct sockaddr_storage &sin) {
+      dev_mtx.lock();
     int ret;
     if (sin.ss_family == AF_INET)
       ((struct sockaddr_in *)&sin)->sin_port = port;
@@ -689,6 +690,7 @@ private:
     if (ret) {
       throw std::runtime_error("Could not listen");
     }
+      dev_mtx.unlock();
   }
 
   // function to exchange rdma info including rkey
