@@ -141,10 +141,10 @@ restart:
    // -------------------------------------------------------------------------------------
    // hot path
    // -------------------------------------------------------------------------------------
-   if (guard.state == STATE::INITIALIZED) {
+    uint16_t thread_id = threads::ThreadContext::my().thread_id;
+    if (guard.state == STATE::INITIALIZED) {
       _mm_prefetch(&guard.frame->page->data[0], _MM_HINT_T0);
       if (guard.frame->epoch < globalEpoch) guard.frame->epoch = globalEpoch.load();
-      uint16_t thread_id = threads::ThreadContext::my().thread_id;
       cache_hit_valid[thread_id][0]++;
        assert(thread_id <= 16);
       return guard;
