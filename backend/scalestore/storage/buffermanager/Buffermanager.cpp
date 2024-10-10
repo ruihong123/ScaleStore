@@ -7,6 +7,10 @@
 // -------------------------------------------------------------------------------------
 namespace scalestore {
 namespace storage {
+uint64_t cache_invalidation[MAX_APP_THREAD] = {0};
+uint64_t cache_miss[MAX_APP_THREAD];
+uint64_t cache_hit_valid[MAX_APP_THREAD][8];
+uint64_t invalid_counter[MAX_APP_THREAD][8];
 Buffermanager::Buffermanager(rdma::CM<rdma::InitMessage>& cm, NodeID nodeId, s32 ssd_fd)
     : dramPoolSize(FLAGS_dramGB * 1024 * 1024 * 1024),
       dramPoolNumberPages(dramPoolSize / sizeof(Page)),

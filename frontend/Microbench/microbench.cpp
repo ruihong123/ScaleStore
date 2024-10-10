@@ -117,9 +117,9 @@ constexpr int addr_size = sizeof(PID);
 constexpr int item_size = addr_size;
 int items_per_block =  storage::PAGE_SIZE / item_size;
 std::atomic<int> thread_sync_counter(0);
-extern uint64_t cache_invalidation[MAX_APP_THREAD];
-extern uint64_t cache_miss[MAX_APP_THREAD];
-extern uint64_t cache_hit_valid[MAX_APP_THREAD][8];
+//extern uint64_t cache_invalidation[MAX_APP_THREAD];
+//extern uint64_t cache_miss[MAX_APP_THREAD];
+//extern uint64_t cache_hit_valid[MAX_APP_THREAD][8];
 __inline__ unsigned long long rdtsc(void) {
     unsigned hi, lo;
     __asm__ __volatile__("rdtsc" : "=a"(lo), "=d"(hi));

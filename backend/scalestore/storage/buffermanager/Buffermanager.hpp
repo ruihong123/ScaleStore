@@ -20,10 +20,7 @@
 #include <stack>
 #include <vector>
 // -------------------------------------------------------------------------------------
-uint64_t cache_invalidation[MAX_APP_THREAD] = {0};
-uint64_t cache_miss[MAX_APP_THREAD];
-uint64_t cache_hit_valid[MAX_APP_THREAD][8];
-uint64_t invalid_counter[MAX_APP_THREAD][8];
+
 namespace scalestore
 {
 namespace profiling
@@ -36,6 +33,9 @@ struct MessageHandler;
 }
 namespace storage
 {
+extern uint64_t cache_invalidation[MAX_APP_THREAD];
+extern uint64_t cache_miss[MAX_APP_THREAD];
+extern uint64_t cache_hit_valid[MAX_APP_THREAD][8];
 struct PageProvider;
 struct BuffermanagerSampler;
 // -------------------------------------------------------------------------------------
