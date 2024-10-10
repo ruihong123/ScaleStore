@@ -145,6 +145,7 @@ restart:
       _mm_prefetch(&guard.frame->page->data[0], _MM_HINT_T0);
       if (guard.frame->epoch < globalEpoch) guard.frame->epoch = globalEpoch.load();
       cache_hit_valid[threads::ThreadContext::my().thread_id][0]++;
+       assert(threads::ThreadContext::my().thread_id <= 16);
       return guard;
    }
     cache_miss[threads::ThreadContext::my().thread_id]++;
