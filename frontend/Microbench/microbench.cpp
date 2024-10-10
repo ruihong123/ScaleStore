@@ -590,7 +590,10 @@ void Benchmark(int id, ScaleStore *alloc, PID *access, uint32_t read_ratio) {
     bool warmup = true;
     Run(access, id, &seedp, warmup, read_ratio);
     barrier.wait();
-
+    for (int i = 0; i < MAX_APP_THREAD; ++i) {
+        cache_miss[i] = 0;
+        cache_hit_valid[i][0] = 0;
+    }
     warmup = false;
 
 
