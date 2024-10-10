@@ -10,9 +10,15 @@ struct ThreadContext{
    // -------------------------------------------------------------------------------------
    static inline thread_local ThreadContext* tlsPtr = nullptr;
    static inline ThreadContext& my() {
-      return *ThreadContext::tlsPtr;
+       static std::atomic<uint16_t> atomic_gen_id = 1;
+       if (ThreadContext::tlsPtr->thread_id == 0){
+           ThreadContext::tlsPtr->thread_id = atomic_gen_id.fetch_add(1);
+       }
+
+       return *ThreadContext::tlsPtr;
    }
    // -------------------------------------------------------------------------------------
+   uint16_t thread_id = 0;
    storage::PartitionedQueue<PID, PARTITIONS, BATCH_SIZE, utils::Stack>::BatchHandle pid_handle;
    storage::PartitionedQueue<storage::BufferFrame*, PARTITIONS, BATCH_SIZE, utils::Stack>::BatchHandle bf_handle;
    storage::PartitionedQueue<storage::Page*, PARTITIONS, BATCH_SIZE, utils::Stack>::BatchHandle page_handle;

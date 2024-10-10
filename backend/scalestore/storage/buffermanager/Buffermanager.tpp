@@ -1,3 +1,4 @@
+
 template <CONTENTION_METHOD method, typename ACCESS>
 Guard Buffermanager::findFrameOrInsert(PID pid, ACCESS functor, NodeID nodeId_)  // move functor
 {
@@ -41,8 +42,9 @@ restart:
        tranverse_counter++;
       current_slot = &(tmp->next);                                       // take address of next field
       RESTART(!ht_latch.optimisticUnlatch(b_version.value()), restart);  // validate against a nullptr change
+      //todo cache hit ++
    }
-
+    // cache invalidation ++
    // -------------------------------------------------------------------------------------
    // Insert
    // -------------------------------------------------------------------------------------
@@ -145,9 +147,13 @@ restart:
    if (guard.state == STATE::INITIALIZED) {
       _mm_prefetch(&guard.frame->page->data[0], _MM_HINT_T0);
       if (guard.frame->epoch < globalEpoch) guard.frame->epoch = globalEpoch.load();
+      cache_hit_valid[threads::ThreadContext::my().thread_id][0]++;
       return guard;
    }
-   // -------------------------------------------------------------------------------------
+    cache_miss[threads::ThreadContext::my().thread_id]++;
+
+
+    // -------------------------------------------------------------------------------------
    // helper lambdas
    // -------------------------------------------------------------------------------------
    auto invalidateSharedConflicts = [&](StaticBitmap<64>& shared, uint64_t pVersion) {
@@ -221,7 +227,7 @@ restart:
       // Remote Fix - no page and need to request it from remote
       // -------------------------------------------------------------------------------------
       case STATE::REMOTE: {
-         // ------------------------------------------------------------------------------------->
+          // ------------------------------------------------------------------------------------->
          ensure(guard.frame);
          ensure(guard.frame->state == BF_STATE::IO_RDMA);
          ensure(FLAGS_nodes > 1);

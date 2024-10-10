@@ -117,7 +117,9 @@ constexpr int addr_size = sizeof(PID);
 constexpr int item_size = addr_size;
 int items_per_block =  storage::PAGE_SIZE / item_size;
 std::atomic<int> thread_sync_counter(0);
-
+extern uint64_t cache_invalidation[MAX_APP_THREAD];
+extern uint64_t cache_miss[MAX_APP_THREAD];
+extern uint64_t cache_hit_valid[MAX_APP_THREAD][8];
 __inline__ unsigned long long rdtsc(void) {
     unsigned hi, lo;
     __asm__ __volatile__("rdtsc" : "=a"(lo), "=d"(hi));
@@ -709,11 +711,17 @@ int main(int argc, char* argv[]) {
         a_thr /= FLAGS_worker;
         long a_lat = avg_latency;
         a_lat /= FLAGS_worker;
-        uint64_t invalidation_num = 0;
+        uint64_t miss_num = 0;
         uint64_t hit_valid_num = 0;
+        for (int i = 0; i < MAX_APP_THREAD; ++i) {
+            miss_num = cache_miss[i] + miss_num;
+        }
+        for (int i = 0; i < MAX_APP_THREAD; ++i) {
+            hit_valid_num = cache_hit_valid[i][0] + hit_valid_num;
+        }
         printf(
-                "results for  node_id %d: workload: %d, zipfian_alpha: %f total_throughput: %ld, avg_throuhgput:%ld, avg_latency:%ld， operation need cache invalidation %lu, operation cache hit and valid is %lu,  total operation executed %ld\n\n",
-                node_id, FLAGS_zip_workload, FLAGS_zipfian_param, t_thr, a_thr, a_lat, invalidation_num, hit_valid_num, ITERATION_TOTAL);
+                "results for  node_id %d: workload: %d, zipfian_alpha: %f total_throughput: %ld, avg_throuhgput:%ld, avg_latency:%ld， operation cache miss %lu, operation cache hit and valid is %lu,  total operation executed %ld\n\n",
+                node_id, FLAGS_zip_workload, FLAGS_zipfian_param, t_thr, a_thr, a_lat, miss_num, hit_valid_num, ITERATION_TOTAL);
 
         //sync with all the other workers
         //check all the benchmark are completed
@@ -721,12 +729,12 @@ int main(int argc, char* argv[]) {
         res[0] = t_thr;  //total throughput for the current node
         res[1] = a_thr;  //avg throuhgput for the current node
         res[2] = a_lat;  //avg latency for the current node
-        res[3] = invalidation_num;  //avg invalidated message number
+        res[3] = miss_num;  //avg invalidated message number
         res[4] = hit_valid_num;  //avg latency for the current node
         int temp = SYNC_KEY + Memcache_offset + node_id;
         printf("memset temp key %d\n", temp);
         memcached.memSet((char*)&temp, sizeof(int), (char*)res, sizeof(long) * 5);
-        t_thr = a_thr = a_lat = invalidation_num = hit_valid_num = 0;
+        t_thr = a_thr = a_lat = miss_num = hit_valid_num = 0;
         for (uint64_t i = 0; i < FLAGS_nodes/2; i++) {
             memset(res, 0, sizeof(long) * 5);
             temp = SYNC_KEY + Memcache_offset + i;
@@ -737,12 +745,12 @@ int main(int argc, char* argv[]) {
             t_thr += ret[0];
             a_thr += ret[1];
             a_lat += ret[2];
-            invalidation_num += ret[3];
+            miss_num += ret[3];
             hit_valid_num += ret[4];
         }
         a_thr /= (FLAGS_nodes/2);
         a_lat /= (FLAGS_nodes/2);
-        invalidation_num /= (FLAGS_nodes/2);
+        miss_num /= (FLAGS_nodes / 2);
         hit_valid_num /= (FLAGS_nodes/2);
 
         if (node_id == 0) {
@@ -757,9 +765,9 @@ int main(int argc, char* argv[]) {
                     "results for all the nodes: "
                     "compute_num: %lu, workload: %d, zipfian_alpha: %f no_thread: %lu, shared_ratio: %d, read_ratio: %d, space_locality: %d, "
                     "op_type = %d, memory_type = %d, item_size = %d, "
-                    "operation with cache invalidation message accounts for %f percents, average cache valid hit percents %f total_throughput: %ld, avg_throuhgput:%ld, avg_latency:%ld, \n\n",
+                    "operation with cache miss accounts for %f percents, average cache valid hit percents %f total_throughput: %ld, avg_throuhgput:%ld, avg_latency:%ld, \n\n",
                     (FLAGS_nodes/2), FLAGS_zip_workload, FLAGS_zipfian_param, FLAGS_worker, FLAGS_shared_ratio, read_ratio,
-                    FLAGS_space_locality, op_type, memory_type, item_size, static_cast<double>(invalidation_num) / ITERATION_TOTAL, static_cast<double>(hit_valid_num) / ITERATION_TOTAL, t_thr,
+                    FLAGS_space_locality, op_type, memory_type, item_size, static_cast<double>(miss_num) / ITERATION_TOTAL, static_cast<double>(hit_valid_num) / ITERATION_TOTAL, t_thr,
                     a_thr, a_lat);
 #ifdef GETANALYSIS
             if (Prereadcounter.load() != 0){

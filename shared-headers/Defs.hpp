@@ -41,6 +41,7 @@ enum LOG_LEVEL{
 
 #define ENSURE_ENABLED 1
 #ifdef ENSURE_ENABLED
+#define MAX_APP_THREAD 48
 #define ensure(e) always_check(e);
 #else
 #define ensure(e) do {} while(0);
