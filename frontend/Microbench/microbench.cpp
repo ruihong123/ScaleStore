@@ -499,7 +499,15 @@ void Run(PID access[], int id, unsigned int *seedp, bool warmup, uint32_t read_r
             case 1:  //rlock/wlock
             {
                 if (TrueOrFalse(read_ratio, seedp)) {
+#ifndef NDEBUG
+                    auto thread_id = scalestore::threads::ThreadContext::my().thread_id;
+                    uint64_t old_hit = cache_hit_valid[thread_id][0];
+                    uint64_t old_miss = cache_miss[thread_id];
+#endif
                     SharedBFGuard guard(to_access);
+#ifndef NDEBUG
+                    assert(old_hit +1 == cache_hit_valid[thread_id][0] || old_miss + 1 == cache_miss[thread_id]);
+#endif
                     memcpy(buf, (char*)guard.getFrame().page->begin() + GetRandom(0, items_per_block - 1, seedp) * item_size, item_size);
                 } else {
                     memset(buf, i, item_size);
