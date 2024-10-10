@@ -136,6 +136,7 @@ Guard Buffermanager::fix(PID pid, ACCESS functor) {
    // -------------------------------------------------------------------------------------
 restart:
    Guard guard = findFrameOrInsert<CONTENTION_METHOD::BLOCKING>(pid, functor, nodeId);
+   bool retried = false;
    ensure(guard.state != STATE::UNINITIALIZED);
    ensure(guard.state != STATE::RETRY);
    // -------------------------------------------------------------------------------------
@@ -149,7 +150,10 @@ restart:
 //       assert(thread_id <= 16);
       return guard;
    }
-    cache_miss[thread_id]++;
+    if (!retried){
+        cache_miss[thread_id]++;
+        retried = true;
+    }
 
 
     // -------------------------------------------------------------------------------------
