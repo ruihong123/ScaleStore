@@ -503,6 +503,9 @@ void Run(PID access[], int id, unsigned int *seedp, bool warmup, uint32_t read_r
                     auto thread_id = scalestore::threads::ThreadContext::my().thread_id;
                     uint64_t old_hit = cache_hit_valid[thread_id][0];
                     uint64_t old_miss = cache_miss[thread_id];
+                    if (!warmup){
+                        assert(old_hit + old_miss == (uint64_t )i);
+                    }
 #endif
                     SharedBFGuard guard(to_access);
 #ifndef NDEBUG
