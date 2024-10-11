@@ -708,7 +708,7 @@ int main(int argc, char* argv[]) {
             barrier.wait();
             unsigned int seedp = FLAGS_worker * ddsm.getNodeID() + t_i;
             // barrier outside
-            Init(&memcached, data_matrix, access_matrix[t_i], shared_matrix[t_i], seedp, &seedp);
+            Init(&memcached, data_matrix, access_matrix[t_i], shared_matrix[t_i], t_i, &seedp);
             barrier.wait();
         });
     }
