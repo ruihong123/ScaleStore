@@ -651,7 +651,7 @@ void Benchmark(int id, ScaleStore *alloc, PID *access, uint32_t read_ratio) {
 
     printf( "start run the benchmark on thread %d\n", id);
     Run(&access[ITERATION], id, &seedp, warmup, read_ratio);
-    cease_counting = true;
+//    cease_counting = true;
     barrier.wait();
 //#ifndef LOCAL_MEMORY
 //    //make sure all the requests are complete
