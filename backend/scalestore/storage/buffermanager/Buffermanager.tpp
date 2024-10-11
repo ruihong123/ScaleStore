@@ -134,9 +134,9 @@ Guard Buffermanager::fix(PID pid, ACCESS functor) {
    using namespace rdma;
 
    // -------------------------------------------------------------------------------------
+    bool retried = false;
 restart:
    Guard guard = findFrameOrInsert<CONTENTION_METHOD::BLOCKING>(pid, functor, nodeId);
-   bool retried = false;
    ensure(guard.state != STATE::UNINITIALIZED);
    ensure(guard.state != STATE::RETRY);
    // -------------------------------------------------------------------------------------
