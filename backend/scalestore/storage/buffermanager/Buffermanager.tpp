@@ -147,13 +147,13 @@ restart:
       _mm_prefetch(&guard.frame->page->data[0], _MM_HINT_T0);
       if (guard.frame->epoch < globalEpoch) guard.frame->epoch = globalEpoch.load();
 
-      if (!cease_counting){
+      if ( functor.type == LATCH_STATE::EXCLUSIVE || functor.type == LATCH_STATE::SHARED ){
             cache_hit_valid[thread_id][0]++;
       }
 //       assert(thread_id <= 16);
       return guard;
     }
-    if (!retried && !cease_counting){
+    if (!retried && (functor.type == LATCH_STATE::EXCLUSIVE || functor.type == LATCH_STATE::SHARED)){
         cache_miss[thread_id]++;
         retried = true;
     }
