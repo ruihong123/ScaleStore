@@ -4,7 +4,7 @@ bin=`cd "$bin"; pwd`
 SRC_HOME=$bin/..
 BIN_HOME=$bin/../build/frontend
 bin_dir=$BIN_HOME
-#home_dir="/users/Ruihong/ScaleStore/"
+home_dir="/users/Ruihong/ScaleStore/"
 nmemory="10"
 ncompute="10"
 nmachines="20"
@@ -72,7 +72,7 @@ function run_bench() {
   i=1
   for node in ${compute_shard[@]}
   do
-#    echo "Rsync the $node rsync -a $home_dir $node:$home_dir"
+    echo "Rsync the $node rsync -a $home_dir $node:$home_dir"
 #    rsync -a $home_dir $node:$home_dir
     ssh -o StrictHostKeyChecking=no $node "cd ${bin_dir}' | ./Occupier" &
 
@@ -80,7 +80,7 @@ function run_bench() {
 
   for node in ${memory_shard[@]}
   do
-#    echo "Rsync the $node rsync -a $home_dir $node:$home_dir"
+    echo "Rsync the $node rsync -a $home_dir $node:$home_dir"
 #    rsync -a $home_dir $node:$home_dir
     ssh -o StrictHostKeyChecking=no $node "cd ${bin_dir}' | ./Occupier" &
   done
