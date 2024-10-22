@@ -72,16 +72,16 @@ function run_bench() {
   i=1
   for node in ${compute_shard[@]}
   do
-    echo "Rsync the $node rsync -a $home_dir $node:$home_dir"
-    rsync -a $home_dir $node:$home_dir
+#    echo "Rsync the $node rsync -a $home_dir $node:$home_dir"
+#    rsync -a $home_dir $node:$home_dir
     ssh -o StrictHostKeyChecking=no $node "cd ${bin_dir}' | ./Occupier" &
 
   done
 
   for node in ${memory_shard[@]}
   do
-    echo "Rsync the $node rsync -a $home_dir $node:$home_dir"
-    rsync -a $home_dir $node:$home_dir
+#    echo "Rsync the $node rsync -a $home_dir $node:$home_dir"
+#    rsync -a $home_dir $node:$home_dir
     ssh -o StrictHostKeyChecking=no $node "cd ${bin_dir}' | ./Occupier" &
   done
 
