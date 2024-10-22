@@ -1,6 +1,6 @@
 #!/bin/bash
 bin=`dirname "$0"`
-bin=`cd "$bin"; pwd`
+#bin=`cd "$bin"; pwd`
 SRC_HOME=$bin/..
 BIN_HOME=$bin/../build/frontend
 bin_dir=$BIN_HOME
@@ -74,7 +74,7 @@ function run_bench() {
   do
     echo "Rsync the $node rsync -a $home_dir $node:$home_dir"
 #    rsync -a $home_dir $node:$home_dir
-    ssh -o StrictHostKeyChecking=no $node "cd ${bin_dir}' | ./Occupier" &
+    ssh -o StrictHostKeyChecking=no $node "cd ${bin_dir} | ./Occupier" &
 
   done
 
@@ -82,7 +82,7 @@ function run_bench() {
   do
     echo "Rsync the $node rsync -a $home_dir $node:$home_dir"
 #    rsync -a $home_dir $node:$home_dir
-    ssh -o StrictHostKeyChecking=no $node "cd ${bin_dir}' | ./Occupier" &
+    ssh -o StrictHostKeyChecking=no $node "cd ${bin_dir} | ./Occupier" &
   done
 
 
