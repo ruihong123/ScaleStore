@@ -1,6 +1,6 @@
 #!/bin/bash
 bin=`dirname "$0"`
-#bin=`cd "$bin"; pwd`
+bin=`cd "$bin"; pwd`
 SRC_HOME=$bin/..
 BIN_HOME=$bin/../build/frontend
 bin_dir=$BIN_HOME
