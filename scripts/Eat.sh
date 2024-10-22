@@ -69,7 +69,6 @@ function run_bench() {
   echo compute shards are ${compute_shard[@]}
   echo memory shards are ${memory_shard[@]}
   echo communication ports are ${communication_port[@]}
-#  test for download and compile the codes
   i=1
   for node in ${compute_shard[@]}
   do
