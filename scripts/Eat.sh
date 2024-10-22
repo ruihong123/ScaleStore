@@ -74,7 +74,7 @@ function run_bench() {
   do
     echo "Rsync the $node rsync -a $home_dir $node:$home_dir"
 #    rsync -a $home_dir $node:$home_dir
-    ssh -o StrictHostKeyChecking=no $node "cd ${bin_dir} | ./Occupier" &
+    ssh -o StrictHostKeyChecking=no $node "cd ${bin_dir} | pwd |./Occupier" &
 
   done
 
@@ -82,7 +82,7 @@ function run_bench() {
   do
     echo "Rsync the $node rsync -a $home_dir $node:$home_dir"
 #    rsync -a $home_dir $node:$home_dir
-    ssh -o StrictHostKeyChecking=no $node "cd ${bin_dir} | ./Occupier" &
+    ssh -o StrictHostKeyChecking=no $node "cd ${bin_dir} | pwd | ./Occupier" &
   done
 
 
