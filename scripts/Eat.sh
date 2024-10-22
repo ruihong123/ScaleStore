@@ -16,7 +16,7 @@ bin=`cd "$bin"; pwd`
 
 core_dump_dir="/mnt/core_dump"
 github_repo="https://github.com/ruihong123/ScaleStore"
-gitbranch="reserved_branch1"
+#gitbranch="reserved_branch1"
 function run_bench() {
   communication_port=()
 #	memory_port=()
