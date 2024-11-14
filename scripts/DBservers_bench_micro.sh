@@ -146,10 +146,10 @@ run() {
           ip=$memory
 #            	port=`echo $memory | cut -d ' ' -f2`
           ibip="192.168.100.$((i+1))"
-          ssh ${ssh_opts} $memory "sudo ifconfig ibp152s0 $ibip"
+#          ssh ${ssh_opts} $memory "sudo ifconfig ibp152s0 $ibip"
           script_memory="cd ${bin_dir} && $numacommand ./MemoryServer -worker=$thread -dramGB=$dramGBMemory -nodes=$numberNodes -messageHandlerThreads=$messagehdt -ownIp=$ibip -port=$port -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBMemory -prob_SSD=$probSSD > $log_file.$ip 2>&1"
           echo "start worker: ssh ${ssh_opts} ${memory} '$script_memory' &"
-          ssh ${ssh_opts} ${memory} " sudo touch /ssd_root/wang4996/data.blk; echo '$core_dump_dir/core$memory' | sudo tee /proc/sys/kernel/core_pattern"
+          ssh ${ssh_opts} ${memory} "touch /ssd_root/wang4996/data.blk; echo '$core_dump_dir/core$memory' | sudo tee /proc/sys/kernel/core_pattern"
           ssh ${ssh_opts} ${memory} "ulimit -S -c unlimited &&  $script_memory | tee -a $log_file.$ip" &
           i=$((i+1))
 #        	if [ "$i" = "$node" ]; then
@@ -172,11 +172,11 @@ run() {
 #        fi
 
         ibip="192.168.100.$((i+$memory_num+1))"
-        ssh ${ssh_opts} $compute "sudo ifconfig ibp152s0 $ibip"
+#        ssh ${ssh_opts} $compute "sudo ifconfig ibp152s0 $ibip"
         script_compute="cd ${bin_dir} && ./microbench -read_ratio=$read_ratio -worker=$thread -dramGB=$dramGBCompute -nodes=$numberNodes -messageHandlerThreads=$messagehdt   -ownIp=$ibip -port=$port -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBCompute -prob_SSD=$probSSD  -all_workloads=$all_workloads -zip_workload=$workload -zipfian_param=$zipfian_alpha -space_locality=$space_locality -shared_ratio=$shared_ratio -allocated_mem_size=$remote_mem_size"
 
         echo "start worker: ssh ${ssh_opts} ${compute} '$script_compute | tee -a $log_file.$ip' &"
-        ssh ${ssh_opts} ${memory} " sudo touch /ssd_root/wang4996/data.blk; echo '$core_dump_dir/core$memory' | sudo tee /proc/sys/kernel/core_pattern"
+        ssh ${ssh_opts} ${memory} "touch /ssd_root/wang4996/data.blk; echo '$core_dump_dir/core$memory' | sudo tee /proc/sys/kernel/core_pattern"
         ssh ${ssh_opts} ${compute} "ulimit -S -c unlimited && $script_compute | tee -a $log_file.$ip" &
         i=$((i+1))
       done # for compute
