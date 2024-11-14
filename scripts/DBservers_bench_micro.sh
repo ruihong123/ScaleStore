@@ -107,14 +107,14 @@ run() {
     while [ $i -lt $memory_num ]
     do
       echo "Rsync the connection.conf to ${memory_nodes[$i]}"
-      rsync -vz /users/Ruihong/ScaleStore/connection.conf ${memory_nodes[$i]}:/users/Ruihong/ScaleStore/connection.conf
+      rsync -vz /home/wang4996/ScaleStore/connection.conf ${memory_nodes[$i]}:/home/wang4996/ScaleStore/connection.conf
       i=$((i+1))
     done
     i=0
     while [ $i -lt $compute_num ]
     do
       echo "Rsync the connection.conf to ${compute_nodes[$i]}"
-      rsync -vz /users/Ruihong/ScaleStore/connection.conf ${compute_nodes[$i]}:/users/Ruihong/ScaleStore/connection.conf
+      rsync -vz /home/wang4996/ScaleStore/connection.conf ${compute_nodes[$i]}:/home/wang4996/ScaleStore/connection.conf
       i=$((i+1))
     done
     i=0
