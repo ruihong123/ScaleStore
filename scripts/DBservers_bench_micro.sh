@@ -29,7 +29,7 @@ fp=1
 messagehdt=4 # default 4
 RUNS=1
 #Runtime=40
-ssdPath="/ssd_root/wang4996"
+ssdPath="/ssd_root/wang4996/data.blk"
 core_dump_dir="/ssd_root/wang4996"
 all_workloads=false
 #numacommand="numactl --physcpubind=23" #bind to 1 core
