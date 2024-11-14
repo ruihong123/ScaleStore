@@ -18,19 +18,19 @@ port=$((10000+RANDOM%1000))
 
 #workernum=8
 dramGBCompute=8
-dramGBMemory=12 #32
+dramGBMemory=32 #32
 ssdGBCompute=9
-ssdGBMemory=24 #36
+ssdGBMemory=36 #36
 numberNodes=$(($compute_num+$memory_num))
 #zipf=0 #[0~1]
 probSSD=100
-pp=2 # default 2
+pp=4 # default 2
 fp=1
 messagehdt=4 # default 4
 RUNS=1
 #Runtime=40
-ssdPath="/mnt/core_dump/data.blk"
-core_dump_dir="/mnt/core_dump"
+ssdPath="/ssd_root/wang4996"
+core_dump_dir="/ssd_root/wang4996"
 all_workloads=false
 #numacommand="numactl --physcpubind=23" #bind to 1 core
 #numacommand="numactl --physcpubind=22,23" #bind to 2 core
@@ -149,7 +149,7 @@ run() {
           ssh ${ssh_opts} $memory "sudo ifconfig ib0 $ibip"
           script_memory="cd ${bin_dir} && $numacommand ./MemoryServer -worker=$thread -dramGB=$dramGBMemory -nodes=$numberNodes -messageHandlerThreads=$messagehdt -ownIp=$ibip -port=$port -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBMemory -prob_SSD=$probSSD > $log_file.$ip 2>&1"
           echo "start worker: ssh ${ssh_opts} ${memory} '$script_memory' &"
-          ssh ${ssh_opts} ${memory} " sudo touch /mnt/core_dump/data.blk; sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; echo '$core_dump_dir/core$memory' | sudo tee /proc/sys/kernel/core_pattern"
+          ssh ${ssh_opts} ${memory} " sudo touch /ssd_root/wang4996/data.blk; echo '$core_dump_dir/core$memory' | sudo tee /proc/sys/kernel/core_pattern"
           ssh ${ssh_opts} ${memory} "ulimit -S -c unlimited &&  $script_memory | tee -a $log_file.$ip" &
           i=$((i+1))
 #        	if [ "$i" = "$node" ]; then
@@ -176,7 +176,7 @@ run() {
         script_compute="cd ${bin_dir} && ./microbench -read_ratio=$read_ratio -worker=$thread -dramGB=$dramGBCompute -nodes=$numberNodes -messageHandlerThreads=$messagehdt   -ownIp=$ibip -port=$port -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBCompute -prob_SSD=$probSSD  -all_workloads=$all_workloads -zip_workload=$workload -zipfian_param=$zipfian_alpha -space_locality=$space_locality -shared_ratio=$shared_ratio -allocated_mem_size=$remote_mem_size"
 
         echo "start worker: ssh ${ssh_opts} ${compute} '$script_compute | tee -a $log_file.$ip' &"
-        ssh ${ssh_opts} ${compute} "sudo chown -R Ruihong:purduedb-PG0 /mnt/core_dump; sudo touch /mnt/core_dump/data.blk ; echo '$core_dump_dir/core$compute' | sudo tee /proc/sys/kernel/core_pattern"
+        ssh ${ssh_opts} ${memory} " sudo touch /ssd_root/wang4996/data.blk; echo '$core_dump_dir/core$memory' | sudo tee /proc/sys/kernel/core_pattern"
         ssh ${ssh_opts} ${compute} "ulimit -S -c unlimited && $script_compute | tee -a $log_file.$ip" &
         i=$((i+1))
       done # for compute
