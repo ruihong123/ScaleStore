@@ -146,7 +146,7 @@ run() {
           ip=$memory
 #            	port=`echo $memory | cut -d ' ' -f2`
           ibip="192.168.100.$((i+compute_num+1))"
-          ssh ${ssh_opts} $memory "sudo ifconfig ib0 $ibip"
+          ssh ${ssh_opts} $memory "sudo ifconfig ibp152s0 $ibip"
           script_memory="cd ${bin_dir} && $numacommand ./MemoryServer -worker=$thread -dramGB=$dramGBMemory -nodes=$numberNodes -messageHandlerThreads=$messagehdt -ownIp=$ibip -port=$port -pageProviderThreads=$pp -coolingPercentage=10 -freePercentage=$fp -csvFile=ycsb_data_scalability_new_hashtable.csv -tag=NO_DELEGATE -evictCoolestEpochs=0.5 --ssd_path=$ssdPath --ssd_gib=$ssdGBMemory -prob_SSD=$probSSD > $log_file.$ip 2>&1"
           echo "start worker: ssh ${ssh_opts} ${memory} '$script_memory' &"
           ssh ${ssh_opts} ${memory} " sudo touch /ssd_root/wang4996/data.blk; echo '$core_dump_dir/core$memory' | sudo tee /proc/sys/kernel/core_pattern"
