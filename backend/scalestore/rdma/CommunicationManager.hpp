@@ -685,7 +685,7 @@ private:
       throw std::runtime_error("Could not bind to rdma device, erron is " +
                                std::to_string(errno));
     }
-    DEBUG_LOG("rdma_bind_addr successful");
+    DEBUG_LOG("rdma_bind_addr successful" << port << FLAGS_ownIp);
     DEBUG_LOG("rdma_listen");
     ret = rdma_listen(incomingCmId, 3);
     if (ret) {
