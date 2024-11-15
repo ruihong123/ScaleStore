@@ -24,7 +24,7 @@
 #include <unistd.h>
 #include <unordered_map>
 
-static int debug = 1;
+static int debug = 0;
 #define DEBUG_LOG(msg)                                                         \
   if (debug)                                                                   \
   std::cout << msg << std::endl
@@ -548,7 +548,7 @@ public:
       throw std::runtime_error("Rdma CM event failed");
     if (event->event != RDMA_CM_EVENT_ESTABLISHED) {
         //why the event is rejected on db servers
-        debug
+//        debug
       DEBUG_LOG("Retry with sleep");
       rdma_ack_cm_event(event);
       rdma_destroy_id(outgoingCmId);
