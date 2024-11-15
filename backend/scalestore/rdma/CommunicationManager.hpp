@@ -541,8 +541,8 @@ public:
     memset(&conn_param, 0, sizeof conn_param);
 
     // not yet sure if those have effect if we use plain qp's
-    conn_param.responder_resources = RDMA_MAX_RESP_RES;
-    conn_param.initiator_depth = RDMA_MAX_INIT_DEPTH;
+    conn_param.responder_resources = 2;
+    conn_param.initiator_depth = 2;
     if (rdma_connect(outgoingCmId, &conn_param))
       throw std::runtime_error("Could not connect to RDMA endpoint");
     if (rdma_get_cm_event(outgoingChannel, &event))
