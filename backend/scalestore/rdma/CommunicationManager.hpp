@@ -420,8 +420,8 @@ public:
         // conn_param.responder_resources = RDMA_MAX_RESP_RES;
         // conn_param.initiator_depth = RDMA_MAX_INIT_DEPTH;
 
-        conn_param.responder_resources = RDMA_MAX_RESP_RES;
-        conn_param.initiator_depth = RDMA_MAX_INIT_DEPTH;
+        conn_param.responder_resources = 2;
+        conn_param.initiator_depth = 2;
 
         ret = rdma_accept(currentId, &conn_param);
         if (ret)
