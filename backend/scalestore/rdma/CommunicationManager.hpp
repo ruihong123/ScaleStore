@@ -380,6 +380,7 @@ public:
     while (running) {
       struct rdma_cm_event *event;
       auto ret = rdma_get_cm_event(incomingChannel, &event);
+      printf("Server %s get connection event\n",FLAGS_ownIp);
       if (ret)
         throw;
       struct rdma_cm_id *currentId = event->id;
