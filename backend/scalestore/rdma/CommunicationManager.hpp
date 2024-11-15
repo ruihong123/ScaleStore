@@ -550,6 +550,7 @@ public:
     if (event->event != RDMA_CM_EVENT_ESTABLISHED) {
         //why the event is rejected on db servers
       printf("Retry with sleep");
+        fflush(stdout);
       rdma_ack_cm_event(event);
       rdma_destroy_id(outgoingCmId);
       rdma_destroy_event_channel(outgoingChannel);
