@@ -547,6 +547,8 @@ public:
     if (rdma_get_cm_event(outgoingChannel, &event))
       throw std::runtime_error("Rdma CM event failed");
     if (event->event != RDMA_CM_EVENT_ESTABLISHED) {
+        //why the event is rejected on db servers
+        debug
       DEBUG_LOG("Retry with sleep");
       rdma_ack_cm_event(event);
       rdma_destroy_id(outgoingCmId);
