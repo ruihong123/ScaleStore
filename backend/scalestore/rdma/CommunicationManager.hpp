@@ -559,6 +559,7 @@ public:
       goto RETRY;
     };
     printf("Connection established");
+      fflush(stdout);
     rdma_ack_cm_event(event);
     exchangeRdmaInfo(outgoingCmId, mr, type, typeId, nodeId);
     rdmaContext->rkey = response->rkey;
