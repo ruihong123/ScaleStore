@@ -24,7 +24,7 @@
 #include <unistd.h>
 #include <unordered_map>
 
-static int debug = 1;
+static int debug = 0;
 #define DEBUG_LOG(msg)                                                         \
   if (debug)                                                                   \
   std::cout << msg << std::endl
@@ -558,7 +558,7 @@ public:
       sleep(1);
       goto RETRY;
     };
-    DEBUG_LOG("Connection established");
+    printf("Connection established");
     rdma_ack_cm_event(event);
     exchangeRdmaInfo(outgoingCmId, mr, type, typeId, nodeId);
     rdmaContext->rkey = response->rkey;
