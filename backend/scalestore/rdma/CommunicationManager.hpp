@@ -491,7 +491,7 @@ public:
         sizeof(RdmaInfo))); // to not reallocate every restart and drain memory
     auto *applicationData =
         static_cast<INITIAL_MSG *>(mbr.allocate(sizeof(INITIAL_MSG)));
-
+      sleep(2);
   RETRY:
     std::unique_lock<std::mutex> l(outgoingMut);
     rdma_event_channel *outgoingChannel = rdma_create_event_channel();
